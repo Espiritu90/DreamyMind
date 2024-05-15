@@ -1,3 +1,130 @@
-# vue-base-tailwind
+# R213-Agence
 
-Config basique de VueJS/ViteJS en TypeScript avec TailwindCSS.
+# Test d'interactions basiques
+
+## Menu
+
+Les éditions du menu sont à faire dans [`/src/App.vue`](/src/App.vue)
+
+- Ajouter l'HTML du menu :
+  ```html
+  <button
+    aria-controls="mainNav"
+    aria-expanded="true"
+    class="rounded-full border-2 border-red-600 bg-red-300 px-2"
+  >
+    menu
+  </button>
+  <!-- nav#mainNav>ul>li*3>a[href="#"]{item $} -->
+  <nav id="mainNav">
+    <ul>
+      <li><a href="#">item 1</a></li>
+      <li><a href="#">item 2</a></li>
+      <li><a href="#">item 3</a></li>
+    </ul>
+  </nav>
+  ```
+- Tester, faire un commit
+- Ajouter la définition de la [`ref`](https://fr.vuejs.org/guide/essentials/reactivity-fundamentals#declaring-reactive-state-1) dans `<script setup>`
+
+  ```js
+  const menuIsOpen = ref(false)
+  ```
+
+- Recharger la page et tester avec [VueDevTools](https://devtools.vuejs.org/), faire un commit
+- L'utiliser avec [`v-show`](https://fr.vuejs.org/guide/essentials/conditional#v-show) pour contrôler l'affichage du menu.
+- Testez avec VueDevTools, faire un commit
+- Changer sa valeur au clic sur le bouton en lui en ajoutant :
+  ```
+  @pointerdown="menuIsOpen = !menuIsOpen"
+  ```
+- Testez, faire un commit
+- Mettre une [`Transition`](https://fr.vuejs.org/guide/built-ins/transition#custom-transition-classes) au tour de la `<nav>` :
+  ```html
+  <Transition
+    class="transition-transform duration-1000"
+    enter-from-class="-translate-x-full"
+    enter-to-class="translate-x-0"
+    leave-active-class="-translate-x-full"
+  ></Transition>
+  ```
+- Testez, faire un commit
+
+## Accordéon
+
+Les éditions du menu sont à faire dans [`/src/pages/index.vue`](/src/pages/index.vue)
+
+Si possible, essayer aussi de faire chaque exercice dans une page séparée (fichiers dans le dossier `/src/pages/`), avec liens (`<RouterLink to="...">`) dans `/src/App.vue` .
+
+- Faire le code HTML de l'accordéon :
+  - `section*3>btn.text-xl{bouton $}+p>lorem`
+- Testez, faire un commit
+- Ajouter à `<script setup>` :
+  ```js
+  const sectionOpen = ref(1)
+  ```
+- Pour chaque section, ajouter et compléter dans l'HTML :
+  ```html
+  <section>
+    <button class="text-xl" @pointerdown="/* change `sectionOpen` à 1 */">bouton 1</button>
+    <p v-show="/* teste si `sectionOpen` est égale à 1 */">loren...</p>
+  </section>
+  ```
+- Testez, faire un commit
+
+## boucle sur des données
+
+- Ajoutez dans `<script setup>` :
+  ```js
+  const sectionsData = [
+    {
+      label: 'bouton 1',
+      texte: `texte panneau 1 Lorem ipsum dolor sit ame
+      consectetur adipisicing elit. Inventore animi dolore,
+      rerum magni laudantium quod excepturi laboriosam, 
+      ex modi debitis harum reprehenderit eaque quam ut
+      ea molestiae. Id, cum dolor!`
+    },
+    {
+      label: 'bouton 2',
+      texte: `texte panneau 2 Amet alias provident quos quis, 
+      Officia ut ab dolores quos dolorem accusamus ad,
+      consectetur unde minima, ipsum eligendi inventore id
+      labore, laborum rerum laboriosam corrupti iste.
+      Distinctio, perspiciatis!`
+    },
+    {
+      label: 'bouton 3',
+      texte: `texte panneau 3 Repudiandae corporis voluptates, 
+      odit reprehenderit sint pariatur at voluptatum, cumque
+      quia sit eligendi ex culpa eos, alias magnam molestiae
+      id modi accusantium ipsa eveniet accusamus. Tempora 
+      quis corporis et nam.`
+    }
+  ]
+  ```
+- Ajouter dans l'HTML ce code utilisant [`v-for`](https://fr.vuejs.org/guide/essentials/list#v-for), pour tester :
+  ```html
+  <section v-for="({ label, texte }, key) of sectionsData" :v-key="key">
+    <pre class="font-mono">key : {{ key }}</pre>
+    <pre class="font-mono">label : {{ label }}</pre>
+    <pre class="font-mono">texte : {{ texte }}</pre>
+  </section>
+  ```
+- Testez, faire un commit
+- Modifier le code de la section/boucle pour qu'il ait la même interaction (bouton, texte caché) que les accordéons précedant. Utiliser `key` à la place du nombre.
+- Testez, faire un commit
+
+## Si vous avez fini
+
+- Changer l'aspect du menu
+  - Changer la [couleur de fond](https://tailwindcss.com/docs/background-color#basic-usage)
+  - Changer sa [largeur](https://tailwindcss.com/docs/width)
+  - Et mettre en forme le reste en lisant la doc de [TailwindCSS](https://tailwindcss.com/docs/utility-first)
+- Faire que cliquer sur la section ouverte la ferme.
+  - Tester si `key` est égale à `sectionOpen`
+    - Si oui mettre `null` dans `sectionOpen`
+    - Sinon mettre `key` dans `sectionOpen`
+- Ajouter le slider fait au S1 (HTML / CSS)
+  - Traduire le CSS en classe Tailwind
+  - Suivre la documentation de [Vue sur les templates refs](https://fr.vuejs.org/guide/essentials/template-refs) pour addapter le `x-ref`

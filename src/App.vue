@@ -1,17 +1,20 @@
 <script setup lang="ts">
-// a completer
+import { onErrorCaptured } from 'vue'
+import { RouterLink, RouterView } from 'vue-router/auto'
+onErrorCaptured((err, instance, info) => {
+  console.error('erreur : ', err, '\ninfo : ', info, '\ncomposant : ', instance)
+  return true
+})
+import HeaderPage from './components/HeaderPage.vue'
+import FooterPage from './components/FooterPage.vue'
 </script>
 
 <template>
-  <header>
-    <h1 class="text-4xl">Test</h1>
-  </header>
-
-  <main>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora recusandae et dolorem odit
-      beatae illo labore, praesentium quidem nulla eveniet, at voluptatem incidunt. Eaque explicabo,
-      vitae quibusdam vero quod atque.
-    </p>
-  </main>
+    <HeaderPage />
+    <RouterView v-slot="{ Component }">
+      <Suspense>
+        <component :is="Component" />
+      </Suspense>
+    </RouterView>
+    <FooterPage />
 </template>
