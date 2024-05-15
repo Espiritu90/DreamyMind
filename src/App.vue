@@ -6,7 +6,7 @@ onErrorCaptured((err, instance, info) => {
   return true
 })
 import HeaderPage from './components/HeaderPage.vue'
-import FooterPage from './components/FooterPage.vue'
+import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
@@ -16,5 +16,5 @@ import FooterPage from './components/FooterPage.vue'
         <component :is="Component" />
       </Suspense>
     </RouterView>
-    <FooterPage />
+    <NavBar/>
 </template>
