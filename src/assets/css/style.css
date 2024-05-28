@@ -133,6 +133,24 @@
     }
 
     label{
-        @apply text-base text-amber-100 font-normal;
+        @apply text-base text-amber-100 font-normal pb-1;
+        }
+
+        input{
+        @apply text-14px text-amber-100 font-normal bg-indigo-900 rounded-xl w-full pl-2 py-2 mb-5 border border-amber-100;
+        }
+
+        ::placeholder{
+        @apply text-14px text-amber-100 font-light opacity-80 mx-auto;
+    }
+
+
+}
+
+
+
+@layer components{
+    .button_submit{
+        @apply mx-3.5 rounded-full bg-fuchsia-900 py-[10px] font-semibold text-amber-100 my-5
     }
 }

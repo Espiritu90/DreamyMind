@@ -5,7 +5,11 @@ export default {
     fontFamily:{
       fixel :['"FixelDisplay"', 'sans-serif']
     },
-    extend: {}
+    extend: {
+      fontSize:{
+        '14px' : '14px',
+      },
+    }
   },
   plugins: []
 }

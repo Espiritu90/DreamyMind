@@ -10,11 +10,11 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-    <HeaderPage />
-    <RouterView v-slot="{ Component }">
+    <HeaderPage class="z-10" />
+    <RouterView v-slot="{ Component }" class="-z-10">
       <Suspense>
         <component :is="Component" />
       </Suspense>
     </RouterView>
-    <NavBar/>
+    <NavBar class="z-10"/>
 </template>
