@@ -1,0 +1,20 @@
+<template>
+    <svg width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_i_128_722)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.50783 0H20.9171C21.3424 0 21.703 0.162498 21.999 0.422632C22.261 0.715198 22.4242 1.07435 22.4242 1.49733V14.2912C22.4242 14.6831 22.261 15.0733 21.999 15.3345C21.703 15.5946 21.3424 15.7571 20.9171 15.7571H18.8514V19.0133C18.8514 19.9565 18.2278 20.2833 17.4405 19.7292L12.1298 15.7575H1.50783C1.08119 15.7575 0.720561 15.595 0.458254 15.3348C0.163638 15.0733 0 14.6831 0 14.2915V1.49733C0 1.07435 0.163638 0.715198 0.458254 0.422632C0.720908 0.162498 1.08119 0 1.50783 0Z" fill="#312E81"/>
+</g>
+<path d="M18.8514 15.2571H18.3514V15.7571V19.0133C18.3514 19.3995 18.2258 19.4813 18.2132 19.4878C18.1991 19.495 18.0557 19.5489 17.7339 19.3242L12.4293 15.3571L12.2961 15.2575H12.1298H1.50783C1.21501 15.2575 0.980376 15.1484 0.810335 14.9798L0.800517 14.9701L0.790176 14.9609C0.609517 14.8005 0.5 14.5499 0.5 14.2915V1.49733C0.5 1.21816 0.60269 0.983949 0.810341 0.777647C0.980945 0.608795 1.21533 0.5 1.50783 0.5H20.9171C21.1939 0.5 21.4334 0.598988 21.6462 0.77863C21.8256 0.987414 21.9242 1.22411 21.9242 1.49733V14.2912C21.9242 14.5475 21.8166 14.8039 21.6564 14.9698C21.441 15.1549 21.1983 15.2571 20.9171 15.2571H18.8514Z" stroke="#FEF3C7"/>
+<defs>
+<filter id="filter0_i_128_722" x="0" y="0" width="22.4243" height="19.9995" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="3"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.117647 0 0 0 0 0.105882 0 0 0 0 0.294118 0 0 0 1 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_128_722"/>
+</filter>
+</defs>
+</svg>
+</template>
