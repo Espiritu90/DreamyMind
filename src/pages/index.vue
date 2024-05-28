@@ -28,7 +28,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="p-6 pb-4 h-[calc(100vh-128px)]">
+  <div class="p-6 pb-4 h-screen">
     <h1>Welcome!</h1>
     <div class="bg-indigo-900 px-4 py-6 rounded-[32px]">
       <h2 class="mb-3">Log in</h2>

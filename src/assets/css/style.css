@@ -154,3 +154,13 @@
         @apply mx-3.5 rounded-full bg-fuchsia-900 py-[10px] font-semibold text-amber-100 my-5
     }
 }
+
+@layer utilities{
+    .wrapper{
+       @apply p-6 pb-4 h-full
+    }
+
+    .wrapper-flex{
+        @apply flex flex-col gap-5
+    }
+}

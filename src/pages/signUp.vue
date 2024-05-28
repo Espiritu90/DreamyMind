@@ -61,7 +61,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-    <div class="p-6 pb-4 h-full">
+    <div class="wrapper">
     <h1>Welcome!</h1>
     <div class="bg-indigo-900 px-4 py-6 rounded-[32px]">
       <h2 class="mb-3">Sign Up</h2>

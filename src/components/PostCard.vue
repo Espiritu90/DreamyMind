@@ -11,6 +11,7 @@ const props = withDefaults(
     text?: string
     likes?: number
     comments?: number
+    published?: boolean
 }>(),
     {
         variant: 'feed',
@@ -53,7 +54,7 @@ const variantClass ={
              <!--published-->
 
              <div :class="props.variant==='journal_public'? 'visible' : 'hidden'" class=" w-fit  flex align-middle justify-center">
-                <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1 py-1 leading-3">Published</p>
+                <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1 py-1.5 leading-3 font-normal">Published</p>
              </div>
            
              <!--title + text-->

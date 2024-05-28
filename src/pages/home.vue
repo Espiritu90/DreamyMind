@@ -26,7 +26,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="p-6 pb-4 h-full flex flex-col gap-5">
+    <div class="wrapper wrapper-flex">
         <h1>Welcome, {{name}}!</h1>
         <Button text="Add a new dream" variant="default" size="full" url="/newDream" :icon="AddHomeIcon"/>
         <Button text="View your AI report" variant="default" size="full" url="/stats" :icon="ReportHomeIcon"/>
