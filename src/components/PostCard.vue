@@ -2,6 +2,20 @@
 import MoonIcon from './icons/MoonIcon.vue';
 import LikeIcon from './icons/LikeIcon.vue';
 import CommentIcon from './icons/CommentIcon.vue';
+import { ref } from 'vue';
+
+interface Props {
+  variant: string;
+  likes: number;
+  comments: number;
+}
+
+
+const isLiked = ref(false);
+
+function toggleLike() {
+  isLiked.value = !isLiked.value;
+}
 const props = withDefaults(
     defineProps<{
     variant?: 'home' | 'feed' | 'profile' | 'journal_private' | 'journal_public'
@@ -29,6 +43,7 @@ const variantClass ={
 </script>
 
 <template>
+    
     <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5"
     :class=variantClass[props.variant]>
     <!--the dream of the week with moon icon-->
@@ -68,12 +83,14 @@ const variantClass ={
 
 <!--like+comment-->
             <div :class="props.variant === 'journal_private' || props.variant==='home' ? 'hidden' : 'visible'" class="flex gap-5">
-                <div class="flex gap-1">
-                    <LikeIcon/>
+                <div class="flex gap-1 items-center">
+                    <LikeIcon @click="toggleLike"
+        :class="{'fill-amber-100': isLiked}" 
+        class="w-6 h-auto cursor-pointer stroke-amber-100" />       
                     <p>{{ likes }}</p>
                 </div>
                 <div class="flex gap-1">
-                    <CommentIcon/>
+                    <CommentIcon class="w-6 h-auto"/>
                     <p>{{ comments }}</p>
                 </div>
             </div>
