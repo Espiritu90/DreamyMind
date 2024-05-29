@@ -42,7 +42,7 @@ const handleSubmit = async () => {
             <p id="message">{{ message }}</p>
           </form>
         </div>
-      <p class="text-center">Not a user yet? <RouterLink to="/signUp" class="font-semibold underline">Sign up</RouterLink></p>
+      <p class="text-center">Not a user yet? <RouterLink to="/en/signUp" class="font-semibold underline">Sign up</RouterLink></p>
       </div>
   </div>
     <img src="../../public/img/gradient.png"
