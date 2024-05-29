@@ -21,9 +21,10 @@ const all = ref(true);
         <div></div>
     </div>
     <PostCard 
-    variant="journal_public" published userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
+    published userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
+
     <PostCard 
     :class="all? 'visible' : 'hidden'"
-    variant="journal_private" userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
+    userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
 </div>
 </template>

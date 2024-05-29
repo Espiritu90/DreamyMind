@@ -18,7 +18,7 @@ function toggleLike() {
 }
 const props = withDefaults(
     defineProps<{
-    variant?: 'home' | 'feed' | 'profile' | 'journal_private' | 'journal_public'
+    variant?: 'home' | 'feed' | 'profile' 
     userAvatar?: string
     user?: string
     title?: string
@@ -36,8 +36,6 @@ const variantClass ={
     home: 'border-2 border-amber-100',
     feed: 'border-none',
     profile: 'border-none',
-    journal_private: 'border-none',
-    journal_public: 'border-none'
 }
 
 </script>
@@ -68,7 +66,7 @@ const variantClass ={
 
              <!--published-->
 
-             <div :class="props.variant==='journal_public'? 'visible' : 'hidden'" class=" w-fit  flex align-middle justify-center">
+             <div :class="published? 'visible' : 'hidden'" class=" w-fit  flex align-middle justify-center">
                 <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1 py-1.5 leading-3 font-normal">Published</p>
              </div>
            
@@ -82,7 +80,7 @@ const variantClass ={
             <RouterLink to="/" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
 
 <!--like+comment-->
-            <div :class="props.variant === 'journal_private' || props.variant==='home' ? 'hidden' : 'visible'" class="flex gap-5">
+            <div :class="published || props.variant==='home' ? 'hidden' : 'visible'" class="flex gap-5">
                 <div class="flex gap-1 items-center">
                     <LikeIcon @click="toggleLike"
         :class="{'fill-amber-100': isLiked}" 
