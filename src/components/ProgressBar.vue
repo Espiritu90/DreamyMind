@@ -28,7 +28,7 @@ watch(() => props.value, (newValue) => {
       }"
     >
       <div class="relative h-full flex items-center justify-left text-yellow-100 ml-4 ">
-        {{ topic }} {{ value }}%
+        <div class="absolute w-40">{{ topic }} {{ value }}%</div>
       </div>
     </div>
   </div>
