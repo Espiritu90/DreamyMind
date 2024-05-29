@@ -7,14 +7,23 @@ import ProfileIcon from './icons/ProfileIcon.vue';
 import ReportIcon from './icons/ReportIcon.vue';
 import { computed } from 'vue';
 
+
 const route = useRoute();
 
-const language = computed(() => route.params.lang as string || 'en');
+// Extraire la langue de l'URL
+const language = computed(() => {
+  const segments = route.path.split('/');
+  const langSegment = segments[1]; // Le segment de langue est normalement le premier segment de l'URL
+  // Vérifiez si le segment de langue correspond à 'en' ou 'fr', sinon, utilisez 'en' par défaut
+  return langSegment === 'en' || langSegment === 'fr' ? langSegment : 'en';
+});
 
+// Générer le lien en utilisant la langue extraite de l'URL
 const generateLink = (path: string) => {
   return `/${language.value}${path}`;
 };
 
+// Obtenir le chemin actuel de la route
 const currentRoute = computed(() => route.path);
 </script>
 
