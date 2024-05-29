@@ -101,7 +101,14 @@ const handleSubmit = async () => {
             <p class="text-[12px] text-violet-300 mb-3 font-extralight -m-2" :class="messageClass">{{ message }}</p>
 
             <div class="flex flex-row justify-between gap-3">
-                <input type="checkbox" id="terms" required class="w-6 h-6 mb-0 fill-none" v-model="terms">
+              <input type="checkbox" id="terms" v-model="terms" class="hidden" />
+    <label for="terms" class="flex items-center cursor-pointer">
+      <span class="w-6 h-6 bg-transparent border-2 border-gray-300 rounded-md flex items-center justify-center">
+        <svg v-if="terms" class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </span>
+    </label>
                 <p class="text-[12px] font-extralight my-auto">I have read and accept <a href="#" class="underline">Terms and conditions</a></p>
             </div>
 
