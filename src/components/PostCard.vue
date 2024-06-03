@@ -73,11 +73,11 @@ const variantClass ={
              <!--title + text-->
              <div class="px-3 pt-2">
                 <h2>{{ title }}</h2>
-                <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text">{{text}}</p>
+                <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{text}}</p>
             </div>
 
             <!--continue reading-->
-            <RouterLink to="/" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
+            <RouterLink to="/posts/[id]" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
 
 <!--like+comment-->
             <div :class="published || props.variant==='home' ? 'hidden' : 'visible'" class="flex gap-5">
