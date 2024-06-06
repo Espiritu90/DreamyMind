@@ -67,6 +67,7 @@ const handleSubmit = async () => {
       <h2 class="mb-3">Sign Up</h2>
         <div class="px-3">
           <form 
+          method="post"
           @submit.prevent="handleSubmit"
           class="flex flex-col px-1">
 
