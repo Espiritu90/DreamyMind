@@ -2,12 +2,46 @@
 import MoonIcon from './icons/MoonIcon.vue';
 import LikeIcon from './icons/LikeIcon.vue';
 import CommentIcon from './icons/CommentIcon.vue';
-import type { DreamResponse } from '@/pocketbase-types';
-defineProps<DreamResponse>();
+import { ref } from 'vue';
+
+interface Props {
+  variant: string;
+  likes: number;
+  comments: number;
+}
+
+
+const isLiked = ref(false);
+
+function toggleLike() {
+  isLiked.value = !isLiked.value;
+}
+const props = withDefaults(
+    defineProps<{
+    variant?: 'home' | 'feed' | 'profile' 
+    userAvatar?: string
+    user?: string
+    title?: string
+    text?: string
+    likes?: number
+    comments?: number
+    published?: boolean
+}>(),
+    {
+        variant: 'feed',
+    }
+)
+
+const variantClass ={
+    home: 'border-2 border-amber-100',
+    feed: 'border-none',
+    profile: 'border-none',
+}
 
 </script>
 
 <template>
+    
     <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5"
    >
     <!--the dream of the week with moon icon-->
@@ -32,7 +66,7 @@ defineProps<DreamResponse>();
 
              <!--published-->
 
-             <div>
+             <div :class="props.variant==='journal_public'? 'visible' : 'hidden'" class=" w-fit  flex align-middle justify-center">
                 <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1 py-1.5 leading-3 font-normal">Published</p>
              </div>
            
@@ -46,13 +80,13 @@ defineProps<DreamResponse>();
             <RouterLink to="/posts/[id]" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
 
 <!--like+comment-->
-            <div >
+            <div :class="props.variant === 'journal_private' || props.variant==='home' ? 'hidden' : 'visible'" class="flex gap-5">
                 <div class="flex gap-1">
                     <LikeIcon/>
                     <p>{{ likes }}</p>
                 </div>
                 <div class="flex gap-1">
-                    <CommentIcon/>
+                    <CommentIcon class="w-6 h-auto"/>
                     <p>{{ comments }}</p>
                 </div>
             </div>
