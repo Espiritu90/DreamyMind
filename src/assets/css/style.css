@@ -161,7 +161,7 @@
 
 @layer utilities{
     .wrapper{
-       @apply p-6 pb-4 h-full
+       @apply p-6 pb-16 h-full
     }
 
     .wrapper-flex{

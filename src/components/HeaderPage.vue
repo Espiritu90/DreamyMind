@@ -4,7 +4,7 @@ import LogoIcon from './icons/LogoIcon.vue';
 </script>
 
 <template>
-  <div class="bg-indigo-900 w-full pl-4 pt-3 pb-1 top-0 left-0 drop-shadow sticky h-16">
+  <div class="bg-indigo-900 w-full pl-4 pt-3 pb-1 top-0 left-0 drop-shadow sticky h-16 z-10">
     <RouterLink to="/home" class="w-[245px]">
         <LogoIcon class="max-w-full"/>
     </RouterLink>

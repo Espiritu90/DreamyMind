@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onErrorCaptured } from 'vue'
-import { RouterLink, RouterView } from 'vue-router/auto'
+import { RouterView } from 'vue-router/auto'
 onErrorCaptured((err, instance, info) => {
   console.error('erreur : ', err, '\ninfo : ', info, '\ncomposant : ', instance)
   return true
@@ -10,11 +10,11 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-    <HeaderPage class="z-10" />
-    <RouterView v-slot="{ Component }" class="-z-10">
+    <HeaderPage  />
+    <RouterView v-slot="{ Component }">
       <Suspense>
-        <component :is="Component" />
+        <component :is="Component" class="-z-10" />
       </Suspense>
     </RouterView>
-    <NavBar class="z-10"/>
+    <NavBar/>
 </template>

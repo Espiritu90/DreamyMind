@@ -42,18 +42,8 @@ const variantClass ={
 
 <template>
     
-    <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5"
+    <div class="my-1.5 bg-indigo-900 rounded-[32px] pt-8 p-5"
     :class=variantClass[props.variant]>
-    <!--the dream of the week with moon icon-->
-        <div class="flex justify-between" :class="props.variant === 'home'? 'visible' : 'hidden'">
-            <h3>The dream of the week</h3>
-            <MoonIcon class="h-max-6"/>
-        </div>
-
-        <!--separator-->
-        <div class="block h-0.5 w-full rounded-full my-2 bg-amber-100" :class="props.variant === 'home'? 'visible' : 'hidden' "></div>
-        <div>
-
 <!--avatar + username-->
                 <div class="flex align-middle gap-2"
                 :class="props.variant === 'home' || props.variant === 'feed' ? 'visible' : 'hidden'">
@@ -93,5 +83,5 @@ const variantClass ={
                 </div>
             </div>
         </div>
-    </div>
+  
 </template>

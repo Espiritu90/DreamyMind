@@ -26,15 +26,13 @@ onMounted(() => {
 });
 </script>
 
-
-
 <template>
   <div class="relative w-32 h-32">
     <svg class="absolute top-0 left-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#D8B4FE" /> <!-- violet-300 -->
-          <stop offset="100%" stop-color="#581c87" /> <!-- fuchsia-900 -->
+          <stop offset="0%" stop-color="#9F7AEA" /> <!-- purple-500 -->
+          <stop offset="100%" stop-color="#9F7AEA" /> <!-- purple-500 -->
         </linearGradient>
         <filter id="inset-shadow">
           <feComponentTransfer in="SourceAlpha">

@@ -10,7 +10,7 @@ import Comment from '@/components/Comment.vue';
         <div class="my-3 bg-indigo-900 rounded-[32px] p-5">
             <div class="flex gap-3 align-middle">
                 <img src="/img/avatar.png" alt="avatar" class="rounded-full w-8 h-8 border-amber-100"/>
-                <RouterLink to="/en/account" class="text-amber-100 font-semibold my-auto">sleepy_user142</RouterLink>
+                <RouterLink to="/account" class="text-amber-100 font-semibold my-auto">sleepy_user142</RouterLink>
             </div>
 
             <div class="my-3">
@@ -21,14 +21,14 @@ import Comment from '@/components/Comment.vue';
             <div>
                 <div class="flex gap-5">
                 <div class="flex gap-1">
-                    <LikeIcon/>
-                    <p>123</p>
+                    <LikeIcon class="w-7 h-auto stroke-amber-100"/>
+                    <p class="my-auto">123</p>
                 </div>
                 <div class="flex gap-1">
                     <CommentIcon/>
                     <p>12</p>
                 </div>
-            </div>
+                </div>
             </div>
 
             <Comment v-for="n in 6" :key="n"

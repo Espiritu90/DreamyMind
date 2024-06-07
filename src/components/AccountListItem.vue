@@ -11,7 +11,7 @@ const following = ref(true)
 
 <template>
     <div class="flex gap-2 my-1">
-        <img src="../../public/img/avatar.png" alt="avatar" class="rounded-full w-8 h-8"/>
+        <img src="/img/avatar.png" alt="avatar" class="rounded-full w-8 h-8"/>
         <p class="my-auto">{{ username }}</p>
         <!--change to RouterLink-->
        

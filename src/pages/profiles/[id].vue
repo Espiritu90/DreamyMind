@@ -7,7 +7,7 @@ const followed = ref(false);
 <template>
     <div class="wrapper">
         <div class="flex align-middle gap-4">
-        <img src="../../../public/img/avatar.png" alt="avatar" class="rounded-full w-20 h-20 border-2 bordrer-amber-100"/>
+        <img src="/img/avatar.png" alt="avatar" class="rounded-full w-20 h-20 border-2 bordrer-amber-100"/>
         <h2 class="my-auto">sleepy_user142</h2>
     </div>
     <button

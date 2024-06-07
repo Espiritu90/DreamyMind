@@ -19,7 +19,7 @@ const props = defineProps<{
         <p class="text-indigo-900">{{text}}</p>
 <div class="flex gap-1">
     
-            <LikeIcon class="fill-none stroke-indigo-900"/>
+            <LikeIcon class="fill-none stroke-indigo-900 w-6 h-auto"/>
             <p class="text-sm text-indigo-900">{{ likes }}</p>
 </div>
     </div>

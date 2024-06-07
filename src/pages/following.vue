@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AccountListItem from '../../components/AccountListItem.vue'
+import AccountListItem from '@/components/AccountListItem.vue'
 </script>
 
 <template>
