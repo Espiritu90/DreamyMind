@@ -2,6 +2,12 @@
 import { pb } from '@/backend';
 import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
+import Avatar1 from '@/components/avatars/Avatar1.vue';
+import Avatar2 from '@/components/avatars/Avatar2.vue';
+import Avatar3 from '@/components/avatars/Avatar3.vue'; 
+import Avatar4 from '@/components/avatars/Avatar4.vue';
+import Avatar5 from '@/components/avatars/Avatar5.vue';
+import Avatar6 from '@/components/avatars/Avatar6.vue';
 
 const router = useRouter();
 const email = ref("");
@@ -13,6 +19,7 @@ const username = ref("");
 const terms = ref(false);
 const message = ref("");
 const passwordsMatch = ref(false);
+const avatar = ref(1);
 
 if (currentUser.value) {
   router.push('/home');
@@ -26,7 +33,8 @@ const doSignUp = async () => {
       emailVisibility: true,
       password: password.value,
       passwordConfirm: passwordConfirm.value,
-      name: name.value
+      name: name.value,
+      avatar: avatar.value
     };
 
     const record = await pb.collection('users').create(data);
@@ -88,6 +96,55 @@ const messageClass = computed(() => {
           <!-- Username input -->
           <label for="username">Username</label>
           <input type="text" id="username" placeholder="ex.: sleepy_user204" required v-model="username">
+
+                    <!-- Avatar selection -->
+             <label>Pick your avatar</label>
+             <div class="flex justify-around">
+            
+            <div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="1" name="avatar" value="1" class="w-fit" v-model="avatar">
+                <label for="1">
+                  <Avatar1 />
+                </label>
+              </div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="2" name="avatar" value="2" class="w-fit" v-model="avatar">
+                <label for="2">
+                  <Avatar2 />
+                </label>
+              </div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="3" name="avatar" value="3" class="w-fit" v-model="avatar">
+                <label for="3">
+                  <Avatar3 />
+                </label>
+              </div>
+              </div>
+
+              <div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="4" name="avatar" value="4" class="w-fit" v-model="avatar">
+                <label for="4">
+                  <Avatar4 />
+                </label>
+              </div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="5" name="avatar" value="5" class="w-fit" v-model="avatar">
+                <label for="5">
+                  <Avatar5 />
+                </label>
+              </div>
+              <div class="flex align-middle gap-4">
+                <input type="radio" id="6" name="avatar" value="6" class="w-fit" v-model="avatar">
+                <label for="6">
+                  <Avatar6 />
+                </label>
+              </div>
+            </div>
+        </div>
+
+
 
           <!-- Password input -->
           <label for="password1">Create a password</label>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PostCard from '@/components/PostCard.vue';
+import DreamCard from '@/components/DreamCard.vue';
 import { ref } from 'vue';
 
 const all = ref(true);
@@ -20,11 +20,11 @@ const all = ref(true);
         class="transition-all duration-300 ease-in-out">Published</button>
         <div></div>
     </div>
-    <PostCard 
-    published userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
+    <DreamCard 
+    published title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
 
-    <PostCard 
+    <DreamCard 
     :class="all? 'visible' : 'hidden'"
-    userAvatar="/img/avatar.png" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
+    title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." class="transition-opacity duration-300 ease-in-out"/>
 </div>
 </template>

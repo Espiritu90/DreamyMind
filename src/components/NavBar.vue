@@ -18,8 +18,8 @@ const route = useRoute();
 
     <RouterLink to="/stats" class="flex flex-col justify-center gap-1 w-11 items-center">
       <ReportIcon 
-        :width="30" 
-        :height="30" 
+        width="30" 
+        height="30" 
         :strokeColor="route.path==='/stats' ? '#fef3c7' : '#C4B5FD'" 
         :fillColor="route.path==='/stats' ? '#fef3c7' : '#C4B5FD'"
       />

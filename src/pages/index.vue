@@ -14,6 +14,9 @@ onMounted(() => {
   pb.authStore.onChange(() => {
     currentUser.value = pb.authStore.model;
   }, true);
+  if (currentUser.value) {
+  router.push('/home');
+}
 });
 
 // Log in
@@ -34,9 +37,7 @@ const doLogin = async () => {
   }
 };
 
-if (currentUser.value) {
-  router.push('/home');
-}
+
 </script>
 
 <template>
