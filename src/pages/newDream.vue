@@ -1,18 +1,43 @@
+<script setup lang="ts">
+import { pb } from '@/backend'
+import { useRouter } from 'vue-router/auto'
+const router = useRouter()
+const submit = async (event: Event) => {
+  event.preventDefault()
+  const form = event.target as HTMLFormElement
+  const formData = new FormData(form)
+
+  // Handle the checkbox value explicitly
+  const publishedCheckbox = form.querySelector('input[name="published"]') as HTMLInputElement
+  formData.set('published', publishedCheckbox.checked ? 'true' : 'false')
+
+  const newDream = await pb.collection('dream').create(formData)
+  router.push({ name: '/dream/[id]', params: { id: newDream.id } })
+  
+  form.reset()
+  form.querySelector('input[name="title"]').value = ''
+  form.querySelector('textarea[name="textDream"]').value = ''
+  form.querySelector('input[name="published"]').checked = false
+}
+</script>
+
+
 <template>
 <div class="wrapper !h-screen">
     <h1>Add a new dream</h1>
     <div>
-        <form class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5">
-            <input type="text" placeholder="Title"/>
-            <textarea placeholder="Description"></textarea>
+        <form class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5" method="post" @submit="submit">
+            <input type="text" placeholder="Title" name="title" id="title"/>
+            <textarea placeholder="Description" name="textDream" id="textDream"></textarea>
             <div class="flex justify-between align-middle">
                 <p class="my-auto">Publish this dream</p>
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" name="published" id="published">
                     <span class="slider round"></span>
                 </label>
             </div>
-            <button type="submit" class="bg-fuchsia-900 rounded-full align-middle py-2 px-6 w-full text-amber-100 font-semibold mt-3">Save</button>
+            <input type="text" name="user" id="user" :value="pb.authStore.model?.id" hidden/>
+            <button type="submit" class="bg-fuchsia-900 rounded-full align-middle py-2 px-6 w-full text-amber-100 font-semibold mt-3" >Save</button>
             <!--When submited open the page with dream-->
         </form>
     </div>

@@ -14,6 +14,9 @@ const router = useRouter();
 const doLogout = () =>{
 pb.authStore.clear();
 router.push({ name: '/' });
+setTimeout(() => {
+    location.reload();
+}, 500);
 }
 
 console.log(pb.authStore.model.avatar);
@@ -43,7 +46,7 @@ console.log(pb.authStore.model.avatar);
     Log out
     </button>
 
-     <RouterLink to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between rounded-full align-middle py-2 px-6">
+     <RouterLink to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between rounded-full align-middle py-2 px-6" v-if="!pb.authStore.model.premium">
         <p class="font-semibold text-indigo-900 my-auto">Get premium</p>
         <StarsIcon class="w-8 h-8"/>
     </RouterLink>

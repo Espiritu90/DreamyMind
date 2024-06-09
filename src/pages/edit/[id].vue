@@ -10,6 +10,7 @@ import { useRouter } from 'vue-router/auto';
 import { ref } from 'vue';
 
 const deleteOpen = ref(false)
+const cancelOpen = ref(false)
 
 const router = useRouter()
 const submit = async (event: Event) => {
@@ -46,6 +47,19 @@ const deleteAccount = async () => {
     console.log("User account and associated records deleted successfully");
   } catch (error) {
     console.error("Error deleting user account:", error);
+  }
+};
+
+const cancelPremium = async () => {
+  try {
+    await pb.collection('users').update(pb.authStore.model.id, { premium: false });
+    console.log("User premium subscription cancelled successfully");
+    router.push({ name: '/home' });
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+  } catch (error) {
+    console.error("Error cancelling user premium subscription:", error);
   }
 };
 </script>
@@ -108,6 +122,18 @@ const deleteAccount = async () => {
     <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5">
         <div class="flex flex-col gap-4">
             <button type="submit" class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6">Change password</button>
+            <button type="submit" class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6" @click="cancelOpen=true">Cancel premium subscription</button>
+            <div v-show="cancelOpen">
+                <p>By canceling your premium subscription, you will lose access to exclusive features and content. Are you sure you want to proceed?</p>
+                <div class="flex justify-between gap-4 mt-3">
+                    <button class="flex text-amber-100 font-semibold w-full justify-center bg-red-700 rounded-full align-middle py-2 px-6" @click="cancelPremium">
+                        Yes
+                    </button>
+                    <button class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6" @click="cancelOpen=false">
+                        No
+                    </button>
+                </div>
+            </div>
             <button type="submit" class="flex text-amber-100 font-semibold w-full justify-center bg-red-700 rounded-full align-middle py-2 px-6" @click="deleteOpen=true">Delete profile</button>
             <div v-show="deleteOpen">
                 <p>Doing this will delete your profile along with all your recorder dreams. This action is irreversible. Do you wish to proceed?</p>

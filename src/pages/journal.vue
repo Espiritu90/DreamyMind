@@ -3,6 +3,12 @@ import DreamCard from '@/components/DreamCard.vue';
 import { ref } from 'vue';
 
 const all = ref(true);
+
+import { pb } from '@/backend';
+import { dreamsOfUser } from '@/backend';
+
+const record = await dreamsOfUser(pb.authStore.model?.id);
+console.log(record.expand?.dream_via_user);
 </script>
 
 <template>
@@ -20,11 +26,6 @@ const all = ref(true);
         class="transition-all duration-300 ease-in-out">Published</button>
         <div></div>
     </div>
-    <DreamCard 
-    published title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123" class="transition-opacity duration-300 ease-in-out"/>
-
-    <DreamCard 
-    :class="all? 'visible' : 'hidden'"
-    title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." class="transition-opacity duration-300 ease-in-out"/>
+    <DreamCard v-for="oneDream in record.expand?.dream_via_user" :key="oneDream.id" v-bind="oneDream" :class="!oneDream.published && !all? 'hidden' : 'visible'"/>
 </div>
 </template>

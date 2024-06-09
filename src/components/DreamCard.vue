@@ -2,6 +2,7 @@
 import LikeIcon from './icons/LikeIcon.vue';
 import CommentIcon from './icons/CommentIcon.vue';
 import { ref } from 'vue';
+import type { DreamResponse } from '@/pocketbase-types';
 
 const isLiked = ref(false);
 
@@ -9,13 +10,7 @@ function toggleLike() {
   isLiked.value = !isLiked.value;
 }
 
-const props=defineProps<{
-    title?: string
-    text?: string
-    likes?: number
-    comments?: number
-    published?: boolean
-}>();
+const props=defineProps<DreamResponse>();
 </script>
 
 <template>
@@ -27,8 +22,17 @@ const props=defineProps<{
         <!--title + text-->
         <div class="px-3 pt-2">
             <h2>{{ title }}</h2>
-            <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{text}}</p>
+            <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{textDream}}</p>
         </div>
+
+        <!--continue reading-->
+        <RouterLink :to="{
+        name: '/dream/[id]',
+        params: {
+          id: id
+        }
+      }" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
+
         <!--like+comment-->
         <div :class="published? 'visible' : 'hidden'" class="flex gap-5">
             <div class="flex gap-1 items-center">

@@ -14,6 +14,9 @@ const getPremium = () => {
         }
         console.log("Promocode is correct");
         router.push({ name: '/home' });
+        setTimeout(() => {
+            location.reload();
+        }, 500);
     } else {
         console.log("Promocode is incorrect");
     }

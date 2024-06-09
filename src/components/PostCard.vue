@@ -14,41 +14,26 @@ function toggleLike() {
   isLiked.value = !isLiked.value;
 }
 
-const props=defineProps<{
-    avatar?: number
-    user?: string
-    title?: string
-    text?: string
-    likes?: number
-    comments?: number
-}>();
+import type { DreamResponse } from '@/pocketbase-types';
+const props = defineProps<DreamResponse>();
 </script>
 
 <template>
     <div class="my-1.5 bg-indigo-900 rounded-[32px] pt-8 p-5">
 
-        <!--avatar + username-->
-        <RouterLink to="/profiles/[id]" class="flex align-middle gap-2">
-            <Avatar1 v-if="props.avatar === 1" class="w-8 h-8"/>
-            <Avatar2 v-if="props.avatar === 2" class="w-8 h-8"/>
-            <Avatar3 v-if="props.avatar === 3" class="w-8 h-8"/>
-            <Avatar4 v-if="props.avatar === 4" class="w-8 h-8"/>
-            <Avatar5 v-if="props.avatar === 5" class="w-8 h-8"/>
-            <Avatar6 v-if="props.avatar === 6" class="w-8 h-8"/>
-            <p class="my-auto">{{ user }}</p>
-        </RouterLink>
-
-        <!--separator-->
-        <div class="block h-0.5 w-full rounded-full my-2 bg-amber-100"></div>
-
-                     <!--title + text-->
+                <!--title + text-->
              <div class="px-3 pt-2">
                 <h2>{{ title }}</h2>
-                <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{text}}</p>
+                <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{textDream}}</p>
             </div>
 
             <!--continue reading-->
-            <RouterLink to="/posts/[id]" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
+            <RouterLink :to="{
+        name: '/posts/[id]',
+        params: {
+          id: id
+        }
+      }" class="text-base text-amber-100 bg-indigo-900 h-fit"><p class="font-semibold text-center">Continue reading</p></RouterLink>
 
 <!--like+comment-->
             <div class="flex gap-5">

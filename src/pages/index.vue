@@ -31,6 +31,9 @@ const doLogin = async () => {
 
     if (pb.authStore.model) {
       router.push('/home');
+      setTimeout(() => {
+    location.reload();
+}, 500);
     }
   } catch (error) {
     console.error('Login Error:', error);
