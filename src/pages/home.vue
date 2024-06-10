@@ -31,9 +31,9 @@ onMounted(async () => {
         <h1>Welcome, {{name}}!</h1>
         <Button text="Add a new dream" variant="default" size="full" url="/newDream" :icon="AddHomeIcon"/>
         <Button text="View your AI report" variant="default" size="full" url="/stats" :icon="ReportHomeIcon"/>
-        <div class="flex gap-5">
+        <div class="flex gap-3 align-middle">
           <h2>The dream of the week</h2>
-              <MoonIcon class="h-max-6"/>
+              <MoonIcon class="h-max-6 my-auto"/>
         </div>
       <!--   <PostCard/> -->
         <RouterLink v-if="!pb.authStore.model?.premium" to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between gap-16 py-5 px-6 rounded-[32px]" >
