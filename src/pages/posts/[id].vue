@@ -80,6 +80,25 @@ const submit = async (event: Event) => {
     console.error('Error creating comment:', error);
   }
 }
+
+
+const deleteOpen = ref(false);
+
+const openDelete = () => {
+  deleteOpen.value = !deleteOpen.value;
+}
+
+const deleteDream = async () => {
+  console.log('Delete dream');
+  try {
+    await pb.collection('dream').delete(dreamById.id);
+    router.push('/journal');
+  } catch (error) {
+    console.error('Error deleting dream:', error);
+  }
+}
+
+const aiVisible = ref(false);
 </script>
 
 <template>
@@ -106,6 +125,39 @@ const submit = async (event: Event) => {
       <div>
         <h1>{{ dreamById.title }}</h1>
         <p>{{ dreamById.textDream }}</p>
+
+                <div v-if="user?.id===pb.authStore.model?.id">
+                  <div class="flex gap-3">
+                            <button @click="openDelete"
+                            class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Delete dream</button>
+                  
+                            <RouterLink :to="{
+                          name: '/editDream/[id]',
+                          params: {
+                            id: dreamById.id
+                          }
+                        }"
+                            class=" bg-fuchsia-900 rounded-full align-middle text-center py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Edit dream</RouterLink >
+                          </div>
+                          <div v-if="deleteOpen" class="transition-opacity duration-500">
+                            <p class="my-2">Are you sure you want to delete this dream?</p>
+                            <div class="flex gap-2">
+                              <button @click="deleteDream"
+                              class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Yes, delete</button>
+                              <button @click="openDelete"
+                              class=" bg-fuchsia-900 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Cancel</button>
+                            </div>
+                            </div>
+                          <button 
+                            @click="aiVisible = !aiVisible"
+                            class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
+                        </div>
+                        <div v-if="aiVisible" class="block h-0.5 w-full bg-amber-100"> </div>
+                        <div v-if="aiVisible" class="transition-opacity duration-500">
+                          <h2>AI explanation</h2>
+                          <p>This dream symbolizes a profound sense of inner peace and spiritual connection. The garden bathed in golden light represents a sanctuary of tranquility and enlightenment. The blooming flowers and swaying trees signify growth, renewal, and the beauty of life unfolding. The inner radiance of each blossom reflects the individual's inner light and vitality. The scent of honey and sunshine evokes feelings of warmth, sweetness, and joy. Overall, the dream suggests a deep harmony with oneself and the surrounding world, as well as a sense of being uplifted by the positive energies and abundant blessings of life.</p>
+                        </div>
+                </div>
 
         <div>
           <div class="flex gap-5">
@@ -134,5 +186,5 @@ const submit = async (event: Event) => {
         </div>
       </div>
     </div>
-  </div>
+  
 </template>

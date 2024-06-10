@@ -26,3 +26,9 @@ export async function userOfComment(id: string){
     console.log(records);
     return records;
 }
+
+export async function dreamById(id: string){
+    const records = await pb.collection('dream').getOne(id);
+    console.log(records);
+    return records;
+}

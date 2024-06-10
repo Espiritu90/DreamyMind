@@ -67,6 +67,22 @@ const submit = async (event: Event) => {
     console.error('Error creating comment:', error);
   }
 }
+
+const deleteOpen = ref(false);
+
+const openDelete = () => {
+  deleteOpen.value = !deleteOpen.value;
+}
+
+const deleteDream = async () => {
+  console.log('Delete dream');
+  try {
+    await pb.collection('dream').delete(dreamById.id);
+    router.push('/journal');
+  } catch (error) {
+    console.error('Error deleting dream:', error);
+  }
+}
 </script>
 
 <template>
@@ -75,6 +91,27 @@ const submit = async (event: Event) => {
       <div>
         <h1>{{ dreamById.title }}</h1>
         <p>{{ dreamById.textDream }}</p>
+        <div class="flex gap-3">
+          <button @click="openDelete"
+          class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Delete dream</button>
+
+          <RouterLink :to="{
+        name: '/editDream/[id]',
+        params: {
+          id: dreamById.id
+        }
+      }"
+          class=" bg-fuchsia-900 rounded-full align-middle text-center py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Edit dream</RouterLink >
+        </div>
+        <div v-if="deleteOpen" class="transition-opacity duration-500">
+          <p class="my-2">Are you sure you want to delete this dream?</p>
+          <div class="flex gap-2">
+            <button @click="deleteDream"
+            class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Yes, delete</button>
+            <button @click="openDelete"
+            class=" bg-fuchsia-900 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Cancel</button>
+          </div>
+          </div>
         <button 
           @click="aiVisible = !aiVisible"
           class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
