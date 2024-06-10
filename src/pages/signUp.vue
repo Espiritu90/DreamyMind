@@ -40,6 +40,7 @@ const doSignUp = async () => {
     const record = await pb.collection('users').create(data);
     console.log(pb.authStore.model);
     await doLogin();
+    
   }
 };
 
@@ -51,6 +52,9 @@ const doLogin = async () => {
   if (pb.authStore.model) {
     router.push({ name: '/home', params: { id: pb.authStore.model.id } });
   }
+  setTimeout(() => {
+    location.reload();
+}, 500);
 };
 
 // Function to check if passwords match

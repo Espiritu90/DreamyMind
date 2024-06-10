@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import PostCard from '@/components/PostCard.vue';
+import { pb } from '@/backend';
+import { ref, onMounted } from 'vue';
+import type { DreamResponse, UsersResponse } from '@/pocketbase-types';
+
+const dreamsWithUsers = ref<Array<{ dream: DreamResponse, user: UsersResponse }>>([]);
+
+onMounted(async () => {
+  const allDreamsPublished = await pb.collection('dream').getFullList({ filter: 'published = true', sort: "-created" });
+
+  for (const dream of allDreamsPublished) {
+    const user = await pb.collection('users').getOne(dream.user);
+    dreamsWithUsers.value.push({ dream, user });
+  }
+});
 </script>
 
 <template>
-<div class="wrapper wrapper-flex">
-<h1>Feed</h1>
-<!-- <div v-for="n in 6" :key="n">
-    <PostCard variant="feed" :avatar="6" user="sleepy_user142" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..." likes="1234" comments="123"/>
-</div> -->
-
-<!-- <PostCard variant="feed" v-for="oneDream in posts" :key="oneDream.id" v-bind="oneDream"/> -->
-<!--<PostCard v-for="oneDream in allDreamsPublished" key="oneDream.id" v-bind="oneDream"-->
-</div>
+    <div class="wrapper wrapper-flex">
+        <h1>Feed</h1>
+        <PostCard v-for="item in dreamsWithUsers" :key="item.dream.id" :dream="item.dream" :user="item.user"/>
+    </div>
 </template>

@@ -21,16 +21,23 @@ interface CommentProps {
 const props = defineProps<CommentProps>();
 
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 const isLiked = ref(false);
 
 function toggleLike() {
   isLiked.value = !isLiked.value;
+  console.log(isLiked.value);
 }
 </script>
 
 <template>
   <div class="bg-amber-100 rounded-xl p-3 flex flex-col gap-2 my-1">
-    <div class="flex gap-1">
+    <RouterLink v-if="user" :to="{
+        name: '/profiles/[id]',
+        params: {
+          id: user.id
+        }
+      }" class="flex gap-1">
       <!-- Conditionally render the avatar based on the user's avatar number -->
       <Avatar1 v-if="user.avatar === 1" class="rounded-full w-5 h-5 border-amber-100"/>
       <Avatar2 v-if="user.avatar === 2" class="rounded-full w-5 h-5 border-amber-100"/>
@@ -39,13 +46,14 @@ function toggleLike() {
       <Avatar5 v-if="user.avatar === 5" class="rounded-full w-5 h-5 border-amber-100"/>
       <Avatar6 v-if="user.avatar === 6" class="rounded-full w-5 h-5 border-amber-100"/>
       <p class="text-sm text-indigo-900">{{ user.username }}</p>
-    </div>
+    </RouterLink >
 
     <p class="text-indigo-900">{{ comment.textComment }}</p>
 
     <div class="flex gap-1">
-      <LikeIcon @click="toggleLike"
-        :class="{'fill-indigo-900': isLiked}" class="fill-none stroke-indigo-900 w-6 h-auto"/>
+      <button @click="toggleLike">
+        <LikeIcon :class="isLiked? 'fill-indigo-900' : 'fill-none'" class="stroke-indigo-900 w-6 h-auto"/>
+      </button>
       <p class="text-sm text-indigo-900">{{ comment.likes }}</p>
     </div>
   </div>

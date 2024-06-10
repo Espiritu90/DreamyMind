@@ -11,6 +11,15 @@ export async function dreamsOfUser(id: string){
     console.log("dreams of a user", id, records);
     return records;
 }
+export async function publicDreamsOfUser(id: string) {
+  const user = await pb.collection('users').getOne(id);
+  const dreams = await pb.collection('dream').getFullList({
+    filter: `user = "${id}" && published = true`,
+    expand: 'user'
+  });
+  return { ...user, expand: { dream_via_user: dreams } };
+}
+
 
 export async function userOfComment(id: string){
     const records = await pb.collection<UsersResponse<{user_via_commment:CommentResponse}>>('users').getOne( id, { expand: "user_via_comment"},);
