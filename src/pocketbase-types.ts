@@ -37,6 +37,8 @@ export type AuthSystemFields<T = never> = {
 // Record types for each collection
 
 export type CommentRecord = {
+	dream?: RecordIdString
+	likes?: number
 	textComment?: string
 	user?: RecordIdString
 }

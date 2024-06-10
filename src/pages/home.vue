@@ -35,8 +35,8 @@ onMounted(async () => {
           <h2>The dream of the week</h2>
               <MoonIcon class="h-max-6"/>
         </div>
-        <PostCard :avatar="2" user="sleepy_user142" :likes="213" :comments="35" title="Enchanted Forest" text="As I wandered through the enchanted forest, I felt a sense of wonder and awe at the towering trees and vibrant foliage that surrounded me. Sunlight filtered through the canopy above, casting dappled shadows on the forest floor. Each step seemed to take..."/>
-        <RouterLink v-if="!pb.authStore.model.premium" to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between gap-16 py-5 px-6 rounded-[32px]" >
+      <!--   <PostCard/> -->
+        <RouterLink v-if="!pb.authStore.model?.premium" to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between gap-16 py-5 px-6 rounded-[32px]" >
             <div class="flex flex-col justify-between" >
                 <h3 class="text-indigo-900">Get Premium</h3>
                 <p class="text-indigo-900 ">Explore our unique features</p>
