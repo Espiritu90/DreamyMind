@@ -7,6 +7,9 @@ import LikeIcon from '@/components/icons/LikeIcon.vue';
 import CommentIcon from '@/components/icons/CommentIcon.vue';
 import SendIcon from '@/components/icons/SendIcon.vue';
 import Comment from '@/components/Comment.vue';
+import { useRouter } from 'vue-router/auto';
+
+const router = useRouter();
 
 const isLiked = ref(false);
 
@@ -24,6 +27,8 @@ const dreamById = await pb.collection<DreamResponse>('dream').getOne(route.param
 const comments = ref<Array<{ comment: CommentResponse, user: UsersResponse }>>([]);
 
 onMounted(async () => {
+  const loggedInUserId = pb.authStore.model.id;
+
   const commentsToDream = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse }>>('dream').getOne(route.params.id, {
     expand: "comment_via_dream",
     sort: "expand.comment_via_dream.created"
@@ -32,10 +37,36 @@ onMounted(async () => {
   if (commentsToDream.expand?.comment_via_dream) {
     for (const comment of commentsToDream.expand.comment_via_dream) {
       const userOfComment = await pb.collection<UsersResponse>('users').getOne(comment.user ?? '');
-      comments.value.push({ comment, user: userOfComment });
+
+      // Prioritize logged-in user's comments by moving them to the beginning of the array
+      if (userOfComment.id === loggedInUserId) {
+        comments.value.unshift({ comment, user: userOfComment });
+      } else {
+        comments.value.push({ comment, user: userOfComment });
+      }
     }
+
+    // Sort comments by the number of likes in descending order
+    comments.value.sort((a, b) => b.comment.likes - a.comment.likes);
   }
 });
+
+const submit = async (event: Event) => {
+  console.log('Form submitted');
+  event.preventDefault();
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  try {
+    const newComment = await pb.collection('comment').create(formData);
+    console.log('Comment created:', newComment);
+    setTimeout(() => {
+        location.reload();
+    }, 500);
+    // Optionally, update the comments list or reset the form here
+  } catch (error) {
+    console.error('Error creating comment:', error);
+  }
+}
 </script>
 
 <template>
@@ -68,10 +99,14 @@ onMounted(async () => {
           </div>
         </div>
         <div class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
-          <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..."/>
-          <button type="submit" class="h-fit w-auto flex align-middle my-auto">
+          <form method="post" @submit="submit" class="w-full flex gap-4">
+              <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..." id="textComment" name="textComment"/>
+              <input type="text" name="dream" :value="dreamById.id" class="hidden"/>
+                <input type="text" name="user" :value="pb.authStore.model?.id" class="hidden"/>
+              <button type="submit" class="h-fit w-auto flex align-middle my-auto">
             <SendIcon class="h-7 w-auto"/>
           </button>
+            </form>
         </div>
         <div v-for="commentData in comments" :key="commentData.comment.id">
           <Comment :comment="commentData.comment" :user="commentData.user"/>
