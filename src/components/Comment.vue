@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LikeIcon from './icons/LikeIcon.vue';
 import type { CommentResponse, UsersResponse } from '@/pocketbase-types';
 import { defineProps } from 'vue';
 
@@ -20,14 +19,7 @@ interface CommentProps {
 // Use the defineProps function to declare the props
 const props = defineProps<CommentProps>();
 
-import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
-const isLiked = ref(false);
-
-function toggleLike() {
-  isLiked.value = !isLiked.value;
-  console.log(isLiked.value);
-}
 </script>
 
 <template>
@@ -49,12 +41,5 @@ function toggleLike() {
     </RouterLink >
 
     <p class="text-indigo-900">{{ comment.textComment }}</p>
-
-    <div class="flex gap-1">
-      <button @click="toggleLike">
-        <LikeIcon :class="isLiked? 'fill-indigo-900' : 'fill-none'" class="stroke-indigo-900 w-6 h-auto"/>
-      </button>
-      <p class="text-sm text-indigo-900">{{ comment.likes }}</p>
-    </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { CommentResponse, DreamResponse, UsersResponse } from '@/pocketbase-types';
+import type { CommentResponse, DreamResponse, UsersResponse, LikePostResponse } from '@/pocketbase-types';
 import { pb } from '@/backend';
 import { useRoute } from 'vue-router/auto';
 import LikeIcon from '@/components/icons/LikeIcon.vue';
@@ -9,33 +9,45 @@ import SendIcon from '@/components/icons/SendIcon.vue';
 import Comment from '@/components/Comment.vue';
 import { useRouter } from 'vue-router/auto';
 
+// Import avatar components
+import Avatar1 from '@/components/avatars/Avatar1.vue';
+import Avatar2 from '@/components/avatars/Avatar2.vue';
+import Avatar3 from '@/components/avatars/Avatar3.vue';
+import Avatar4 from '@/components/avatars/Avatar4.vue';
+import Avatar5 from '@/components/avatars/Avatar5.vue';
+import Avatar6 from '@/components/avatars/Avatar6.vue';
+
 const router = useRouter();
 
 const isLiked = ref(false);
-
-function toggleLike() {
-  isLiked.value = !isLiked.value;
-}
+const likes = ref(0);
+const commentCount = ref(0);
 
 const route = useRoute('/dream/[id]');
 console.log('id :', route.params.id);
 
-const aiVisible = ref(false);
-
 const dreamById = await pb.collection<DreamResponse>('dream').getOne(route.params.id);
+const user = ref<UsersResponse>();
 
 const comments = ref<Array<{ comment: CommentResponse, user: UsersResponse }>>([]);
 
 onMounted(async () => {
-  const loggedInUserId = pb.authStore.model.id;
+  const loggedInUserId = pb.authStore.model?.id;
 
-  const commentsToDream = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse }>>('dream').getOne(route.params.id, {
-    expand: "comment_via_dream",
+  // Fetch the user data for the dream
+  user.value = await pb.collection('users').getOne(dreamById.user);
+
+  // Fetch the likes and comments for the dream
+  const dreamData = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse, likePost_via_dream: LikePostResponse }>>('dream').getOne(route.params.id, {
+    expand: "comment_via_dream,likePost_via_dream",
     sort: "expand.comment_via_dream.created"
   });
 
-  if (commentsToDream.expand?.comment_via_dream) {
-    for (const comment of commentsToDream.expand.comment_via_dream) {
+  // Update the comment count
+  if (dreamData.expand?.comment_via_dream) {
+    commentCount.value = dreamData.expand.comment_via_dream.length;
+
+    for (const comment of dreamData.expand.comment_via_dream.reverse()) { // Reverse the comments array
       const userOfComment = await pb.collection<UsersResponse>('users').getOne(comment.user ?? '');
 
       // Prioritize logged-in user's comments by moving them to the beginning of the array
@@ -45,11 +57,41 @@ onMounted(async () => {
         comments.value.push({ comment, user: userOfComment });
       }
     }
+  }
 
-    // Sort comments by the number of likes in descending order
-    comments.value.sort((a, b) => b.comment.likes - a.comment.likes);
+  // Update the like count
+  if (dreamData.expand?.likePost_via_dream) {
+    likes.value = dreamData.expand.likePost_via_dream.length;
+
+    // Check if the user has liked the post
+    isLiked.value = dreamData.expand.likePost_via_dream.some(like => like.user === loggedInUserId);
   }
 });
+
+async function toggleLike() {
+  const loggedInUserId = pb.authStore.model.id;
+  const dreamId = dreamById.id;
+
+  if (isLiked.value) {
+    // Delete the like record
+    const likeRecords = await pb.collection<LikePostResponse>('likePost').getFullList({
+      filter: `user="${loggedInUserId}" && dream="${dreamId}"`,
+    });
+    if (likeRecords.length > 0) {
+      await pb.collection('likePost').delete(likeRecords[0].id);
+      likes.value--;
+    }
+  } else {
+    // Create a new like record
+    await pb.collection<LikePostResponse>('likePost').create({
+      user: loggedInUserId,
+      dream: dreamId,
+    });
+    likes.value++;
+  }
+
+  isLiked.value = !isLiked.value;
+}
 
 const submit = async (event: Event) => {
   console.log('Form submitted');
@@ -83,71 +125,91 @@ const deleteDream = async () => {
     console.error('Error deleting dream:', error);
   }
 }
+
+const aiVisible = ref(false);
 </script>
 
 <template>
   <div class="wrapper">
     <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5 flex flex-col gap-5">
+      <!-- Display user data -->
+      <RouterLink v-if="user" :to="{
+        name: '/profiles/[id]',
+        params: {
+          id: user.id
+        }
+      }">
+        <div class="flex items-center gap-2">
+          <div v-if="user.avatar === 1"><Avatar1 class="w-8 h-8 rounded-full" /></div>
+          <div v-if="user.avatar === 2"><Avatar2 class="w-8 h-8 rounded-full" /></div>
+          <div v-if="user.avatar === 3"><Avatar3 class="w-8 h-8 rounded-full" /></div>
+          <div v-if="user.avatar === 4"><Avatar4 class="w-8 h-8 rounded-full" /></div>
+          <div v-if="user.avatar === 5"><Avatar5 class="w-8 h-8 rounded-full" /></div>
+          <div v-if="user.avatar === 6"><Avatar6 class="w-8 h-8 rounded-full" /></div>
+          <p class="text-sm text-amber-100">{{ user.username }}</p>
+        </div>
+      </RouterLink>
+
       <div>
         <h1>{{ dreamById.title }}</h1>
         <p>{{ dreamById.textDream }}</p>
-        <div class="flex gap-3">
-          <button @click="openDelete"
-          class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Delete dream</button>
 
-          <RouterLink :to="{
-        name: '/editDream/[id]',
-        params: {
-          id: dreamById.id
-        }
-      }"
-          class=" bg-fuchsia-900 rounded-full align-middle text-center py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Edit dream</RouterLink >
-        </div>
-        <div v-if="deleteOpen" class="transition-opacity duration-500">
-          <p class="my-2">Are you sure you want to delete this dream?</p>
-          <div class="flex gap-2">
-            <button @click="deleteDream"
-            class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Yes, delete</button>
+        <div v-if="user?.id === pb.authStore.model?.id">
+          <div class="flex gap-3">
             <button @click="openDelete"
-            class=" bg-fuchsia-900 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Cancel</button>
+              class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Delete dream</button>
+            <RouterLink :to="{
+              name: '/editDream/[id]',
+              params: {
+                id: dreamById.id
+              }
+            }"
+              class=" bg-fuchsia-900 rounded-full align-middle text-center py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Edit dream</RouterLink>
           </div>
+          <div v-if="deleteOpen" class="transition-opacity duration-500">
+            <p class="my-2">Are you sure you want to delete this dream?</p>
+            <div class="flex gap-2">
+              <button @click="deleteDream"
+                class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Yes, delete</button>
+              <button @click="openDelete"
+                class=" bg-fuchsia-900 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Cancel</button>
+            </div>
           </div>
-        <button 
-          @click="aiVisible = !aiVisible"
-          class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
+          <button
+            @click="aiVisible = !aiVisible"
+            class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
+        </div>
+        <div v-if="aiVisible" class="block h-0.5 w-full bg-amber-100"></div>
+        <div v-if="aiVisible" class="transition-opacity duration-500">
+          <h2>AI explanation</h2>
+          <p>This dream symbolizes a profound sense of inner peace and spiritual connection. The garden bathed in golden light represents a sanctuary of tranquility and enlightenment. The blooming flowers and swaying trees signify growth, renewal, and the beauty of life unfolding. The inner radiance of each blossom reflects the individual's inner light and vitality. The scent of honey and sunshine evokes feelings of warmth, sweetness, and joy. Overall, the dream suggests a deep harmony with oneself and the surrounding world, as well as a sense of being uplifted by the positive energies and abundant blessings of life.</p>
+        </div>
       </div>
-      <div v-if="aiVisible" class="block h-0.5 w-full bg-amber-100"> </div>
-      <div v-if="aiVisible" class="transition-opacity duration-500">
-        <h2>AI explanation</h2>
-        <p>This dream symbolizes a profound sense of inner peace and spiritual connection. The garden bathed in golden light represents a sanctuary of tranquility and enlightenment. The blooming flowers and swaying trees signify growth, renewal, and the beauty of life unfolding. The inner radiance of each blossom reflects the individual's inner light and vitality. The scent of honey and sunshine evokes feelings of warmth, sweetness, and joy. Overall, the dream suggests a deep harmony with oneself and the surrounding world, as well as a sense of being uplifted by the positive energies and abundant blessings of life.</p>
-      </div>
-      
-      <div v-if="dreamById.published">
-        <div>
-          <div class="flex gap-5">
-            <div class="flex gap-1">
-              <LikeIcon class="w-7 h-auto stroke-amber-100" @click="toggleLike" :class="{ 'fill-amber-100': isLiked }"/>
-              <p class="my-auto">{{ dreamById.likes }}</p>
-            </div>
-            <div class="flex gap-1">
-              <CommentIcon/>
-              <p>{{ dreamById.comments }}</p>
-            </div>
+
+      <div>
+        <div class="flex gap-5">
+          <div class="flex gap-1">
+            <LikeIcon class="w-7 h-auto stroke-amber-100" @click="toggleLike" :class="{ 'fill-amber-100': isLiked }"/>
+            <p class="my-auto">{{ likes }}</p>
+          </div>
+          <div class="flex gap-1">
+            <CommentIcon/>
+            <p>{{ commentCount }}</p>
           </div>
         </div>
-        <div class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
-          <form method="post" @submit="submit" class="w-full flex gap-4">
-              <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..." id="textComment" name="textComment"/>
-              <input type="text" name="dream" :value="dreamById.id" class="hidden"/>
-                <input type="text" name="user" :value="pb.authStore.model?.id" class="hidden"/>
-              <button type="submit" class="h-fit w-auto flex align-middle my-auto">
+      </div>
+      <div class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
+        <form method="post" @submit="submit" class="w-full flex gap-4">
+          <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..." id="textComment" name="textComment"/>
+          <input type="text" name="dream" :value="dreamById.id" class="hidden"/>
+          <input type="text" name="user" :value="pb.authStore.model?.id" class="hidden"/>
+          <button type="submit" class="h-fit w-auto flex align-middle my-auto">
             <SendIcon class="h-7 w-auto"/>
           </button>
-            </form>
-        </div>
-        <div v-for="commentData in comments" :key="commentData.comment.id">
-          <Comment :comment="commentData.comment" :user="commentData.user"/>
-        </div>
+        </form>
+      </div>
+      <div v-for="commentData in comments" :key="commentData.comment.id">
+        <Comment :comment="commentData.comment" :user="commentData.user"/>
       </div>
     </div>
   </div>

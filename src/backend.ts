@@ -1,5 +1,5 @@
 import PocketBase from 'pocketbase'
-import { type DreamResponse, type TypedPocketBase, type UsersResponse, type CommentResponse } from './pocketbase-types.js'
+import { type DreamResponse, type TypedPocketBase, type UsersResponse, type CommentResponse, type LikePostResponse } from './pocketbase-types.js'
 
 export const pb = new PocketBase(import.meta.env.VITE_URL_POCKETBASE) as TypedPocketBase
 
@@ -31,4 +31,8 @@ export async function dreamById(id: string){
     const records = await pb.collection('dream').getOne(id);
     console.log(records);
     return records;
+}
+
+export async function doLikePost(idPost: string, idUser: string){
+    
 }
