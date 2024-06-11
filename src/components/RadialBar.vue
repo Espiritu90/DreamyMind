@@ -1,29 +1,37 @@
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, watch, defineProps } from 'vue';
 
 const props = defineProps<{ value: number }>();
 
 const progress = ref(0);
 const displayProgress = ref(0);
 
-onMounted(() => {
+const animateProgress = () => {
   let currentProgress = 0;
   const increment = props.value / 100; // Determines the speed of the increment
 
-  const animateProgress = () => {
+  const step = () => {
     if (currentProgress < props.value) {
       currentProgress += increment;
-      progress.value = currentProgress;
-      displayProgress.value = Math.round(currentProgress);
-      requestAnimationFrame(animateProgress);
+      progress.value = Math.min(currentProgress, props.value); // Ensure it doesn't exceed the value
+      displayProgress.value = Math.round(progress.value);
+      requestAnimationFrame(step);
     } else {
       progress.value = props.value;
       displayProgress.value = props.value;
     }
   };
 
-  animateProgress();
-});
+  step();
+};
+
+// Watch for changes in the prop value
+watch(() => props.value, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    animateProgress();
+  }
+}, { immediate: true });
+
 </script>
 
 <template>

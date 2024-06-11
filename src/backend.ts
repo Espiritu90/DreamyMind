@@ -129,3 +129,65 @@ export async function interpretationByDream(id: string) {
   console.log('Interpretation for dream:', id, records);
   return records;
 }
+
+//stats
+
+export async function getUserActivityPercentage(userId: string): Promise<number> {
+  // Fetch user data
+  const user = await pb.collection<UsersResponse>('users').getOne(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Calculate the number of days since account creation
+  const accountCreationDate = new Date(user.created);
+  const currentDate = new Date();
+  const daysSinceCreation = Math.ceil((currentDate.getTime() - accountCreationDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // Fetch user's dreams
+  const userDreams = await pb.collection<DreamResponse>('dream').getFullList({
+    filter: `user="${userId}"`,
+  });
+
+  // Extract the dates on which dreams were created
+  const dreamDates = userDreams.map(dream => new Date(dream.created).toDateString());
+  
+  // Get unique dream dates
+  const uniqueDreamDates = new Set(dreamDates);
+
+  // Calculate the percentage
+  const activeDays = uniqueDreamDates.size;
+  const activityPercentage = (activeDays / daysSinceCreation) * 100;
+
+  // Return the percentage value without the % sign
+  return Math.round(activityPercentage);
+}
+
+
+
+export async function getNightmarePercentage(userId: string): Promise<number> {
+  try {
+    // Fetch all dreams of the user
+    const response = await pb.collection('dream').getFullList<DreamResponse>({
+      filter: `user="${userId}"`,
+    });
+
+    const dreams = response;
+
+    // Check if there are any dreams
+    if (!dreams.length) {
+      return 0; // No dreams
+    }
+
+    // Count the number of nightmares
+    const nightmareCount = dreams.filter(dream => dream.nightmare).length;
+
+    // Calculate the percentage
+    const percentage = (nightmareCount / dreams.length) * 100;
+
+    return Math.round(percentage); // Return the percentage rounded to the nearest integer
+  } catch (error) {
+    console.error('Error fetching dreams:', error);
+    return 0; // In case of an error, return 0
+  }
+}
