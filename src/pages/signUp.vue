@@ -181,5 +181,4 @@ const messageClass = computed(() => {
       <p class="text-center">Already a user? <RouterLink to="/" class="font-semibold underline">Log in</RouterLink></p>
     </div>
   </div>
-  <img src="/img/gradient.png" class="-z-20 absolute top-0 left-0 h-screen object-cover opacity-70"/>
 </template>

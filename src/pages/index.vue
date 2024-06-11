@@ -60,5 +60,4 @@ const doLogin = async () => {
       <p class="text-center">Not a user yet? <RouterLink to="/signUp" class="font-semibold underline">Sign up</RouterLink></p>
     </div>
   </div>
-  <img src="/img/gradient.png" class="-z-10 absolute top-0 left-0 h-screen object-cover opacity-70" />
 </template>

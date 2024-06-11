@@ -29,4 +29,5 @@ import ProgressBar from '@/components/ProgressBar.vue';
         </div>
     </section>
 </div>
+
 </template>

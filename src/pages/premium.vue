@@ -41,4 +41,5 @@ const getPremium = () => {
             <button @click="getPremium" to="/getPremium" class="bg-fuchsia-900 flex justify-center rounded-full align-middle py-3 px-6 text-center text-amber-100 font-semibold">Redeem</button>
         </div>
     </div>
+    
 </template>
