@@ -6,6 +6,7 @@ import { pb } from '@/backend';
 const router = useRouter();
 const promocode= ref("MMI1-2024");
 const promocodeInput = ref("");
+const isError = ref(false);
 
 const getPremium = () => {
     if (promocodeInput.value === promocode.value) {
@@ -19,6 +20,7 @@ const getPremium = () => {
         }, 500);
     } else {
         console.log("Promocode is incorrect");
+        isError.value = true;
     }
 };
 </script>
@@ -38,6 +40,7 @@ const getPremium = () => {
             <form>
                 <input type="text" placeholder="XXXX-XXXX" v-model="promocodeInput">
             </form>
+            <p v-if="isError" class="text-[12px] text-violet-300  font-extralight mb-1 -mt-2">This promocode is invalid</p>
             <button @click="getPremium" to="/getPremium" class="bg-fuchsia-900 flex justify-center rounded-full align-middle py-3 px-6 text-center text-amber-100 font-semibold">Redeem</button>
         </div>
     </div>

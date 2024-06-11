@@ -9,6 +9,7 @@ const username = ref('');
 const password = ref('');
 const router = useRouter();
 const currentUser = ref();
+const isError = ref(false);
 
 onMounted(() => {
   pb.authStore.onChange(() => {
@@ -36,7 +37,8 @@ const doLogin = async () => {
 }, 500);
     }
   } catch (error) {
-    console.error('Login Error:', error);
+      console.error('Login Error:', error);
+      isError.value = true;
   }
 };
 
@@ -54,6 +56,7 @@ const doLogin = async () => {
           <input type="text" placeholder="ex.: sleepy_user204" v-model="username" id="username" name="username" required />
           <label for="password">Password</label>
           <input type="password" placeholder="********" v-model="password" id="password" name="password" required />
+          <p v-if="isError" class="text-[12px] text-violet-300  font-extralight ">Invalid username or password</p>
           <button type="button" @click="doLogin" class="button_submit">Log in</button>
         </form>
       </div>

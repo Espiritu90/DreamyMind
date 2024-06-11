@@ -20,6 +20,7 @@ const terms = ref(false);
 const message = ref("");
 const passwordsMatch = ref(false);
 const avatar = ref(1);
+const isError = ref(false);
 
 if (currentUser.value) {
   router.push('/home');
@@ -41,7 +42,7 @@ const doSignUp = async () => {
     console.log(pb.authStore.model);
     await doLogin();
     
-  }
+  } else {isError.value = true;}
 };
 
 const doLogin = async () => {
@@ -174,6 +175,7 @@ const messageClass = computed(() => {
             <p class="text-[12px] font-extralight my-auto">I have read and accept <a href="https://dreamy-mind.ozone-digital.fr/terms-and-conditions-of-use/" class="underline">Terms and conditions</a></p>
           </div>
 
+            <p v-if="isError" class="text-[12px] text-violet-300 mb-3 font-extralight -m-2">Error signing up. Please verify that all fields are filled correctly.</p>
           <!-- Submit button -->
           <button class="button_submit" :disabled="!passwordsMatch" @click="doSignUp" type="button">Sign up</button>
         </form>
