@@ -16,6 +16,8 @@ const submit = async (event: Event) => {
   // Handle the checkbox value explicitly
   const publishedCheckbox = form.querySelector('input[name="published"]') as HTMLInputElement
   formData.set('published', publishedCheckbox.checked ? 'true' : 'false')
+  const nightmareCheckbox = form.querySelector('input[name="nightmare"]') as HTMLInputElement
+  formData.set('nightmare', nightmareCheckbox.checked ? 'true' : 'false')
 
   const newDream = await pb.collection('dream').update(route.params.id, formData)
   router.push({ name: '/dream/[id]', params: { id: newDream.id } })
@@ -24,6 +26,7 @@ const submit = async (event: Event) => {
   form.querySelector('input[name="title"]').value = ''
   form.querySelector('textarea[name="textDream"]').value = ''
   form.querySelector('input[name="published"]').checked = false
+  form.querySelector('input[name="nightmare"]').checked = false
 }
 
 const record = await dreamById(route.params.id);
@@ -33,11 +36,18 @@ console.log(record);
 
 <template>
 <div class="wrapper !h-screen">
-    <h1>Add a new dream</h1>
+    <h1>Edit your dream</h1>
     <div>
         <form class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5" method="post" @submit="submit">
             <input type="text" placeholder="Title" name="title" id="title" :value="record.title"/>
             <textarea placeholder="Description" name="textDream" id="textDream" :value="record.textDream"></textarea>
+            <div class="flex justify-between align-middle">
+                <p class="my-auto">Is it a nightmare?</p>
+                <label class="switch">
+                    <input type="checkbox" name="nightmare" id="nightmare" :checked="record.nightmare">
+                    <span class="slider round"></span>
+                </label>
+            </div>
             <div class="flex justify-between align-middle">
                 <p class="my-auto">Publish this dream</p>
                 <label class="switch">
@@ -47,7 +57,6 @@ console.log(record);
             </div>
             <input type="text" name="user" id="user" :value="pb.authStore.model?.id" hidden/>
             <button type="submit" class="bg-fuchsia-900 rounded-full align-middle py-2 px-6 w-full text-amber-100 font-semibold mt-3" >Save</button>
-            <!--When submited open the page with dream-->
         </form>
     </div>
 </div>

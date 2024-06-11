@@ -10,6 +10,8 @@ const submit = async (event: Event) => {
   // Handle the checkbox value explicitly
   const publishedCheckbox = form.querySelector('input[name="published"]') as HTMLInputElement
   formData.set('published', publishedCheckbox.checked ? 'true' : 'false')
+  const nightmareCheckbox = form.querySelector('input[name="nightmare"]') as HTMLInputElement
+  formData.set('nightmare', nightmareCheckbox.checked ? 'true' : 'false')
 
   const newDream = await pb.collection('dream').create(formData)
   router.push({ name: '/dream/[id]', params: { id: newDream.id } })
@@ -18,6 +20,7 @@ const submit = async (event: Event) => {
   form.querySelector('input[name="title"]').value = ''
   form.querySelector('textarea[name="textDream"]').value = ''
   form.querySelector('input[name="published"]').checked = false
+  form.querySelector('input[name="nightmare"]').checked = false
 }
 </script>
 
@@ -30,6 +33,13 @@ const submit = async (event: Event) => {
             <input type="text" placeholder="Title" name="title" id="title"/>
             <textarea placeholder="Description" name="textDream" id="textDream"></textarea>
             <div class="flex justify-between align-middle">
+                <p class="my-auto">Is it a nightmare?</p>
+                <label class="switch">
+                    <input type="checkbox" name="nightmare" id="nightmare">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="flex justify-between align-middle mt-2">
                 <p class="my-auto">Publish this dream</p>
                 <label class="switch">
                     <input type="checkbox" name="published" id="published">

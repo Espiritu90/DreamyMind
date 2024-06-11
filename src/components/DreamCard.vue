@@ -10,7 +10,7 @@ const likeCount = ref(0);
 const dreamWithComments = ref<DreamResponse<{ comment_via_dream: CommentResponse[], likePost_via_dream: LikePostResponse[] }>>();
 
 async function toggleLike() {
-  const loggedInUserId = pb.authStore.model.id;
+  const loggedInUserId = pb.authStore.model?.id;
   const dreamId = props.id;
 
   if (isLiked.value) {
@@ -42,40 +42,45 @@ onMounted(async () => {
   });
 
   // Update the like count
-  if (dreamWithComments.value.expand?.likePost_via_dream) {
-    likeCount.value = dreamWithComments.value.expand.likePost_via_dream.length;
+  if (dreamWithComments.value?.expand?.likePost_via_dream) {
+    likeCount.value = dreamWithComments.value?.expand.likePost_via_dream.length;
 
     // Check if the user has liked the post
-    isLiked.value = dreamWithComments.value.expand.likePost_via_dream.some(like => like.user === pb.authStore.model.id);
+    isLiked.value = dreamWithComments.value?.expand.likePost_via_dream.some(like => like.user === pb.authStore.model?.id);
   }
 });
 </script>
 
 <template>
-    <div class="my-1.5 bg-indigo-900 rounded-[32px] pt-8 p-5">
-        <!--published-->
-        <div class="w-fit flex align-middle justify-center" :class="published ? 'visible' : 'hidden'">
-            <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1 py-1.5 leading-3 font-normal">Published</p>
-        </div>
-        <!--title + text-->
-        <div class="px-3 pt-2">
-            <h2>{{ title }}</h2>
-            <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{ textDream }}</p>
-        </div>
-        <!--continue reading-->
-        <RouterLink :to="{ name: '/dream/[id]', params: { id: id } }" class="text-base text-amber-100 bg-indigo-900 h-fit">
-            <p class="font-semibold text-center">Continue reading</p>
-        </RouterLink>
-        <!--like+comment-->
-        <div :class="published ? 'visible' : 'hidden'" class="flex gap-5">
-            <div class="flex gap-1 items-center">
-                <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-6 h-auto cursor-pointer stroke-amber-100" />
-                <p>{{ likeCount }}</p>
-            </div>
-            <div class="flex gap-1">
-                <CommentIcon class="w-6 h-auto" />
-                <p>{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
-            </div>
-        </div>
+  <div class="my-1.5 bg-indigo-900 rounded-[32px] pt-8 p-5">
+    <!--published and nightmare tags-->
+    <div class="flex gap-2">
+      <div class="w-fit flex align-middle justify-center" :class="published ? 'visible' : 'hidden'">
+        <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1.5 py-2 leading-3 font-normal">Published</p>
+      </div>
+      <div class="w-fit flex align-middle justify-center" :class="nightmare ? 'visible' : 'hidden'">
+        <p class="text-indigo-900 m-auto text-sm align-middle bg-amber-100 rounded-full px-1.5 py-2 leading-3 font-normal">Nightmare</p>
+      </div>
     </div>
+    <!--title + text-->
+    <div class="px-3 pt-2">
+      <h2>{{ title }}</h2>
+      <p class="bg-gradient-to-t from-transparent from-[1%] via-amber-100 via-30% to-amber-100 text-transparent bg-clip-text line-clamp-6">{{ textDream }}</p>
+    </div>
+    <!--continue reading-->
+    <RouterLink :to="{ name: '/dream/[id]', params: { id: id } }" class="text-base text-amber-100 bg-indigo-900 h-fit">
+      <p class="font-semibold text-center">Continue reading</p>
+    </RouterLink>
+    <!--like+comment-->
+    <div :class="published ? 'visible' : 'hidden'" class="flex gap-5">
+      <div class="flex gap-1 items-center">
+        <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-6 h-auto cursor-pointer stroke-amber-100" />
+        <p>{{ likeCount }}</p>
+      </div>
+      <div class="flex gap-1">
+        <CommentIcon class="w-6 h-auto" />
+        <p>{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
+      </div>
+    </div>
+  </div>
 </template>
