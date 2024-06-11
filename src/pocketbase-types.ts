@@ -9,7 +9,6 @@ export enum Collections {
 	Comment = "comment",
 	Dream = "dream",
 	Interpretation = "interpretation",
-	LikeComment = "likeComment",
 	LikePost = "likePost",
 	Users = "users",
 }
@@ -45,6 +44,7 @@ export type CommentRecord = {
 }
 
 export type DreamRecord = {
+	nightmare?: boolean
 	published?: boolean
 	textDream?: string
 	title?: string
@@ -53,14 +53,7 @@ export type DreamRecord = {
 
 export type InterpretationRecord = {
 	dream?: RecordIdString
-	nightmare?: boolean
 	textInterpretation?: string
-	topic?: string
-}
-
-export type LikeCommentRecord = {
-	comment?: RecordIdString
-	user?: RecordIdString
 }
 
 export type LikePostRecord = {
@@ -78,7 +71,6 @@ export type UsersRecord = {
 export type CommentResponse<Texpand = unknown> = Required<CommentRecord> & BaseSystemFields<Texpand>
 export type DreamResponse<Texpand = unknown> = Required<DreamRecord> & BaseSystemFields<Texpand>
 export type InterpretationResponse<Texpand = unknown> = Required<InterpretationRecord> & BaseSystemFields<Texpand>
-export type LikeCommentResponse<Texpand = unknown> = Required<LikeCommentRecord> & BaseSystemFields<Texpand>
 export type LikePostResponse<Texpand = unknown> = Required<LikePostRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
@@ -88,7 +80,6 @@ export type CollectionRecords = {
 	comment: CommentRecord
 	dream: DreamRecord
 	interpretation: InterpretationRecord
-	likeComment: LikeCommentRecord
 	likePost: LikePostRecord
 	users: UsersRecord
 }
@@ -97,7 +88,6 @@ export type CollectionResponses = {
 	comment: CommentResponse
 	dream: DreamResponse
 	interpretation: InterpretationResponse
-	likeComment: LikeCommentResponse
 	likePost: LikePostResponse
 	users: UsersResponse
 }
@@ -109,7 +99,6 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'comment'): RecordService<CommentResponse>
 	collection(idOrName: 'dream'): RecordService<DreamResponse>
 	collection(idOrName: 'interpretation'): RecordService<InterpretationResponse>
-	collection(idOrName: 'likeComment'): RecordService<LikeCommentResponse>
 	collection(idOrName: 'likePost'): RecordService<LikePostResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

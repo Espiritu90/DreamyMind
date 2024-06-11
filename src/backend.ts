@@ -1,5 +1,5 @@
 import PocketBase from 'pocketbase'
-import { type DreamResponse, type TypedPocketBase, type UsersResponse, type CommentResponse, type LikePostResponse } from './pocketbase-types.js'
+import { type DreamResponse, type TypedPocketBase, type UsersResponse, type CommentResponse, type LikePostResponse, type InterpretationResponse } from './pocketbase-types.js'
 
 export const pb = new PocketBase(import.meta.env.VITE_URL_POCKETBASE) as TypedPocketBase
 
@@ -70,4 +70,62 @@ export async function getMostLikedPostLastWeek(): Promise<{ dream: DreamResponse
   }
 
   return null;
+}
+
+const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3";
+const headers = { "Authorization": "Bearer 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", "Content-Type": "application/json" };
+
+export async function interpretDream(id) {
+  try {
+    const records = await pb.collection('dream').getOne(id);
+    const dreamText = records.textDream;
+    console.log('Dream text:', dreamText);
+
+    const prompt = `You are an expert in dream interpretation. Please provide a simple interpretation of the following dream in no more than 100 words: '${dreamText}'.`;
+    console.log('Prompt:', prompt);
+
+    const payload = {
+      inputs: prompt,
+      parameters: { max_new_tokens: 500, return_full_text: true }
+    };
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(payload)
+    });
+
+    const responseData = await response.json();
+    console.log('Response data:', responseData);
+
+    const generatedText = responseData[0].generated_text;
+    console.log('Generated text:', generatedText);
+
+    const promptLength = prompt.length;
+    const output = generatedText.substring(promptLength).trim();
+
+    // Remove Markdown-style code blocks from the response
+    const cleanedOutput = output.replace(/```json\n|\n```/g, "");
+    console.log('Cleaned output:', cleanedOutput);
+
+    const newInterpretation = await pb.collection('interpretation').create({ textInterpretation: cleanedOutput, dream: id });
+    console.log('New interpretation created:', newInterpretation);
+
+    return cleanedOutput;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+export async function interpretationByDream(id: string) {
+  console.log('Fetching interpretation for dream:', id);
+  const records = await pb.collection<DreamResponse<{ interpretation_via_dream: InterpretationResponse }>>('dream').getOne(
+    id,
+    {
+      expand: 'interpretation_via_dream',
+    }
+  );
+  console.log('Interpretation for dream:', id, records);
+  return records;
 }

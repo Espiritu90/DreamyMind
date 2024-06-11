@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { CommentResponse, DreamResponse, UsersResponse, LikePostResponse } from '@/pocketbase-types';
+import type { CommentResponse, DreamResponse, UsersResponse, LikePostResponse, InterpretationResponse} from '@/pocketbase-types';
 import { pb } from '@/backend';
 import { useRoute } from 'vue-router/auto';
 import LikeIcon from '@/components/icons/LikeIcon.vue';
@@ -32,22 +32,24 @@ const user = ref<UsersResponse>();
 const comments = ref<Array<{ comment: CommentResponse, user: UsersResponse }>>([]);
 
 onMounted(async () => {
-  const loggedInUserId = pb.authStore.model?.id;
+  const loggedInUserId = pb.authStore.model.id;
 
   // Fetch the user data for the dream
   user.value = await pb.collection('users').getOne(dreamById.user);
 
   // Fetch the likes and comments for the dream
-  const dreamData = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse, likePost_via_dream: LikePostResponse }>>('dream').getOne(route.params.id, {
-    expand: "comment_via_dream,likePost_via_dream",
+  const dreamData = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse, likePost_via_dream: LikePostResponse, interpretation_via_dream: InterpretationResponse }>>('dream').getOne(route.params.id, {
+    expand: "comment_via_dream,likePost_via_dream,interpretation_via_dream",
     sort: "expand.comment_via_dream.created"
   });
+
+  console.log('dreamData:', dreamData);
 
   // Update the comment count
   if (dreamData.expand?.comment_via_dream) {
     commentCount.value = dreamData.expand.comment_via_dream.length;
 
-    for (const comment of dreamData.expand.comment_via_dream.reverse()) { // Reverse the comments array
+    for (const comment of dreamData.expand.comment_via_dream) {
       const userOfComment = await pb.collection<UsersResponse>('users').getOne(comment.user ?? '');
 
       // Prioritize logged-in user's comments by moving them to the beginning of the array
@@ -57,6 +59,9 @@ onMounted(async () => {
         comments.value.push({ comment, user: userOfComment });
       }
     }
+
+    // Sort comments by the number of likes in descending order
+    comments.value.sort((a, b) => b.comment.likes - a.comment.likes);
   }
 
   // Update the like count
@@ -66,6 +71,8 @@ onMounted(async () => {
     // Check if the user has liked the post
     isLiked.value = dreamData.expand.likePost_via_dream.some(like => like.user === loggedInUserId);
   }
+
+  await interpret();
 });
 
 async function toggleLike() {
@@ -127,6 +134,50 @@ const deleteDream = async () => {
 }
 
 const aiVisible = ref(false);
+
+import { interpretDream } from '@/backend';
+import { interpretationByDream } from '@/backend';
+
+let record = ref<DreamResponse<{ interpretation_via_dream: InterpretationResponse[] }>>();
+
+async function interpret() {
+  const dreamId = route.params.id;
+
+  // Check if an interpretation already exists for the dream
+  const interpretationRecord = await pb.collection('interpretation').getFirstListItem(`dream="${dreamId}"`);
+
+  if (interpretationRecord) {
+    // If an interpretation already exists, display it
+    aiVisible.value = true;
+    record.value = await interpretationByDream(dreamId);
+    console.log('Interpretation record:', record.value);
+    console.log('interpretation_via_dream:', record.value.expand?.interpretation_via_dream);
+  } else {
+    // If no interpretation exists, display the "Explain with AI" button
+    aiVisible.value = false;
+  }
+}
+
+
+async function createInterpretation() {
+  const dreamId = route.params.id;
+
+  // Create a new interpretation record
+  const interpretation = await interpretDream(dreamId);
+  console.log('Interpretation:', interpretation);
+
+  // Fetch the interpretation record for the dream
+  record.value = await interpretationByDream(dreamId);
+  console.log('Interpretation record:', record.value);
+
+  // Display the interpretation
+  aiVisible.value = true;
+}
+
+// Call the interpret function when the page is loaded
+onMounted(async () => {
+  await interpret();
+});
 </script>
 
 <template>
@@ -154,7 +205,20 @@ const aiVisible = ref(false);
         <h1>{{ dreamById.title }}</h1>
         <p>{{ dreamById.textDream }}</p>
 
-        <div v-if="user?.id === pb.authStore.model?.id">
+        
+          <button
+            v-if="!aiVisible"
+            @click="createInterpretation"
+            class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
+        </div>
+        <div v-if="aiVisible && record" class="block h-0.5 w-full bg-amber-100 my-3"></div>
+<div v-if="aiVisible && record" class="transition-opacity duration-500">
+  <h2>AI explanation</h2>
+  <p v-for="interpretation in record.expand?.interpretation_via_dream" :key="interpretation.id">
+    {{ interpretation.textInterpretation }}
+  </p>
+</div>
+<div v-if="user?.id === pb.authStore.model?.id">
           <div class="flex gap-3">
             <button @click="openDelete"
               class=" bg-red-700 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Delete dream</button>
@@ -175,16 +239,8 @@ const aiVisible = ref(false);
                 class=" bg-fuchsia-900 rounded-full align-middle py-2.5 px-6 w-full text-amber-100 font-semibold mt-2">Cancel</button>
             </div>
           </div>
-          <button
-            @click="aiVisible = !aiVisible"
-            class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
-        </div>
-        <div v-if="aiVisible" class="block h-0.5 w-full bg-amber-100"></div>
-        <div v-if="aiVisible" class="transition-opacity duration-500">
-          <h2>AI explanation</h2>
-          <p>This dream symbolizes a profound sense of inner peace and spiritual connection. The garden bathed in golden light represents a sanctuary of tranquility and enlightenment. The blooming flowers and swaying trees signify growth, renewal, and the beauty of life unfolding. The inner radiance of each blossom reflects the individual's inner light and vitality. The scent of honey and sunshine evokes feelings of warmth, sweetness, and joy. Overall, the dream suggests a deep harmony with oneself and the surrounding world, as well as a sense of being uplifted by the positive energies and abundant blessings of life.</p>
-        </div>
       </div>
+    
 
       <div>
         <div class="flex gap-5">
