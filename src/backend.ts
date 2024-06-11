@@ -40,11 +40,11 @@ export async function getMostLikedPostLastWeek(): Promise<{ dream: DreamResponse
   try {
     const startOfWeek = new Date();
     startOfWeek.setHours(0, 0, 0, 0);
-    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Go to the start of the week (Sunday)
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Go to the start of the week (Monday)
 
     const endOfWeek = new Date();
     endOfWeek.setHours(23, 59, 59, 999);
-    endOfWeek.setDate(startOfWeek.getDate() + 6); // Go to the end of the week (Saturday)
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Go to the end of the week (Sunday)
 
     const lastWeekLikes = await pb.collection<LikePostResponse>('likePost').getFullList({
       filter: `created >= "${startOfWeek.toISOString()}" && created <= "${endOfWeek.toISOString()}"`,
