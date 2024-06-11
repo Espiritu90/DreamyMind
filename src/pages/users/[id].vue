@@ -31,7 +31,10 @@ console.log(pb.authStore.model.avatar);
         <Avatar4 v-if="pb.authStore.model.avatar === 4" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
         <Avatar5 v-if="pb.authStore.model.avatar === 5" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
         <Avatar6 v-if="pb.authStore.model.avatar === 6" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <h2 class="my-auto">{{ pb.authStore.model.username }}</h2>
+        <div class="flex gap-2">
+            <h2 class="my-auto">{{ pb.authStore.model.username }}</h2>
+            <StarsIcon v-if="pb.authStore.model.premium" class="w-8 h-8 my-auto"/>
+        </div>
     </div>
         <RouterLink :to="{
         name: '/edit/[id]',

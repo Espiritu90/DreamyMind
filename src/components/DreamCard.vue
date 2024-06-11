@@ -72,15 +72,15 @@ onMounted(async () => {
       <p class="font-semibold text-center">Continue reading</p>
     </RouterLink>
     <!--like+comment-->
-    <div :class="published ? 'visible' : 'hidden'" class="flex gap-5">
-      <div class="flex gap-1 items-center">
-        <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-6 h-auto cursor-pointer stroke-amber-100" />
-        <p>{{ likeCount }}</p>
-      </div>
-      <div class="flex gap-1">
-        <CommentIcon class="w-6 h-auto" />
-        <p>{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
-      </div>
-    </div>
+    <div class="flex gap-5">
+            <div class="flex gap-2 align-text-top justify-start">
+                <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-7 stroke-amber-100" />
+                <p class="my-auto">{{ likeCount }}</p>
+            </div>
+            <RouterLink :to="`/dream/${id}`" class="flex gap-2">
+                <CommentIcon class="w-6 h-auto" />
+                <p class="my-auto">{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
+            </RouterLink>
+        </div>
   </div>
 </template>

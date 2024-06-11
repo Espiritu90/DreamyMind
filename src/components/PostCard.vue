@@ -64,6 +64,7 @@ onMounted(async () => {
     isLiked.value = dreamWithComments.value.expand.likePost_via_dream.some(like => like.user === pb.authStore.model.id);
   }
 });
+import StarsIcon from './icons/StarsIcon.vue';
 </script>
 
 <template>
@@ -83,7 +84,10 @@ onMounted(async () => {
                 <div v-if="user.avatar === 4"><Avatar4 class="w-8 h-8 rounded-full" /></div>
                 <div v-if="user.avatar === 5"><Avatar5 class="w-8 h-8 rounded-full" /></div>
                 <div v-if="user.avatar === 6"><Avatar6 class="w-8 h-8 rounded-full" /></div>
-                <p class="text-sm text-amber-100">{{ user.username }}</p>
+                <div class="flex gap-2">
+            <p class="text-sm text-amber-100 ">{{ user.username }}</p>
+            <StarsIcon v-if="user.premium" class="w-4 h-4 self-start m-0"/>
+        </div>
             </div>
         </RouterLink>
 
@@ -100,13 +104,13 @@ onMounted(async () => {
 
         <!-- Like + Comment -->
         <div class="flex gap-5">
-            <div class="flex gap-1 items-center">
-                <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-6 h-auto cursor-pointer stroke-amber-100" />
-                <p>{{ likeCount }}</p>
+            <div class="flex gap-2 align-text-top justify-start">
+                <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-7 stroke-amber-100" />
+                <p class="my-auto">{{ likeCount }}</p>
             </div>
-            <RouterLink :to="`/posts/${dream?.id}`" class="flex gap-1">
+            <RouterLink :to="`/posts/${dream?.id}`" class="flex gap-2">
                 <CommentIcon class="w-6 h-auto" />
-                <p>{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
+                <p class="my-auto">{{ dreamWithComments?.expand?.comment_via_dream?.length || 0 }}</p>
             </RouterLink>
         </div>
 

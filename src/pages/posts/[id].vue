@@ -178,6 +178,8 @@ onMounted(async () => {
   await interpret();
 });
 
+import StarsIcon from '@/components/icons/StarsIcon.vue';
+
 </script>
 
 <template>
@@ -197,7 +199,10 @@ onMounted(async () => {
           <div v-if="user.avatar === 4"><Avatar4 class="w-8 h-8 rounded-full" /></div>
           <div v-if="user.avatar === 5"><Avatar5 class="w-8 h-8 rounded-full" /></div>
           <div v-if="user.avatar === 6"><Avatar6 class="w-8 h-8 rounded-full" /></div>
-          <p class="text-sm text-amber-100">{{ user.username }}</p>
+          <div class="flex gap-2">
+            <p class="text-amber-100 ">{{ user.username }}</p>
+            <StarsIcon v-if="user.premium" class="w-4 h-4 self-start m-0"/>
+        </div>
         </div>
       </RouterLink>
 
@@ -247,8 +252,8 @@ onMounted(async () => {
             <p class="my-auto">{{ likeCount }}</p>
           </div>
           <div class="flex gap-1">
-            <CommentIcon/>
-            <p>{{ commentCount }}</p>
+            <CommentIcon class="w-7 h-auto"/>
+            <p class="my-auto">{{ commentCount }}</p>
           </div>
         </div>
       </div>
