@@ -54,10 +54,13 @@ const doLogin = async () => {
         <form class="flex flex-col px-1">
           <label for="username">Username</label>
           <input type="text" placeholder="ex.: sleepy_user204" v-model="username" id="username" name="username" required />
-          <label for="password">Password</label>
+          <div class="flex justify-between align-top">
+            <label for="password">Password</label>
+            <RouterLink to="/changePassword" class="my-auto text-sm underline text-amber-100">Forgot your password?</RouterLink>
+          </div>
           <input type="password" placeholder="********" v-model="password" id="password" name="password" required />
           <p v-if="isError" class="text-sm text-violet-300  font-light ">Invalid username or password</p>
-          <button type="button" @click="doLogin" class="button_submit">Log in</button>
+          <button type="button" @click="doLogin" class="button_submit -mt-0.5">Log in</button>
         </form>
       </div>
       <p class="text-center">Not a user yet? <RouterLink to="/signUp" class="font-semibold underline">Sign up</RouterLink></p>

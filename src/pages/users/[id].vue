@@ -19,27 +19,26 @@ setTimeout(() => {
 }, 500);
 }
 
-console.log(pb.authStore.model.avatar);
 </script>
 
 <template>
 <div class="wrapper wrapper-flex !h-screen">
     <div class="flex align-middle gap-4">
-        <Avatar1 v-if="pb.authStore.model.avatar === 1" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <Avatar2 v-if="pb.authStore.model.avatar === 2" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <Avatar3 v-if="pb.authStore.model.avatar === 3" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <Avatar4 v-if="pb.authStore.model.avatar === 4" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <Avatar5 v-if="pb.authStore.model.avatar === 5" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
-        <Avatar6 v-if="pb.authStore.model.avatar === 6" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar1 v-if="pb.authStore.model?.avatar === 1" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar2 v-if="pb.authStore.model?.avatar === 2" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar3 v-if="pb.authStore.model?.avatar === 3" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar4 v-if="pb.authStore.model?.avatar === 4" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar5 v-if="pb.authStore.model?.avatar === 5" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
+        <Avatar6 v-if="pb.authStore.model?.avatar === 6" class="rounded-full w-20 h-20 border-2 border-amber-100"/>
         <div class="flex gap-2">
-            <h2 class="my-auto">{{ pb.authStore.model.username }}</h2>
-            <StarsIcon v-if="pb.authStore.model.premium" class="w-8 h-8 my-auto"/>
+            <h2 class="my-auto">{{ pb.authStore.model?.username }}</h2>
+            <StarsIcon v-if="pb.authStore.model?.premium" class="w-8 h-8 my-auto"/>
         </div>
     </div>
         <RouterLink :to="{
         name: '/edit/[id]',
         params: {
-          id: pb.authStore.model.id
+          id: pb.authStore.model?.id
         }
       }" class="flex justify-between bg-fuchsia-900 rounded-full align-middle py-4 px-6">
         <p class="font-semibold my-auto">Edit your profile</p>

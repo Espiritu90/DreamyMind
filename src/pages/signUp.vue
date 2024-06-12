@@ -38,12 +38,16 @@ const doSignUp = async () => {
       avatar: avatar.value
     };
 
-    const record = await pb.collection('users').create(data);
-    console.log(pb.authStore.model);
-    await doLogin();
-    
-  } else {isError.value = true;}
-};
+    try {
+      const record = await pb.collection('users').create(data);
+      console.log(pb.authStore.model);
+      await doLogin();
+    } catch (error) {
+      
+      console.error(error);
+      isError.value = true;
+    }
+  }};
 
 const doLogin = async () => {
   const authData = await pb.collection('users').authWithPassword(email.value, password.value);
@@ -175,7 +179,7 @@ const messageClass = computed(() => {
             <p class="text-sm font-light my-auto">I have read and accept <a href="https://dreamy-mind.ozone-digital.fr/terms-and-conditions-of-use/" class="underline">Terms and conditions</a></p>
           </div>
 
-            <p v-if="isError" class="text-[12px] text-violet-300 mb-3 font-extralight -m-2">Error signing up. Please verify that all fields are filled correctly.</p>
+            <p v-if="isError" class="text-sm text-violet-300 m-3 mb-4 font-light ">Error signing up. Please verify that all fields are filled correctly.</p>
           <!-- Submit button -->
           <button class="button_submit" :disabled="!passwordsMatch" @click="doSignUp" type="button">Sign up</button>
         </form>
