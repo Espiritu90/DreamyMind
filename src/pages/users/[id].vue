@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router';
 import StarsIcon from '@/components/icons/StarsIcon.vue';
 import { pb } from '@/backend';
 import { useRouter } from 'vue-router/auto';
+import { ref, onMounted } from 'vue';
 import Avatar1 from '@/components/avatars/Avatar1.vue';
 import Avatar2 from '@/components/avatars/Avatar2.vue';
 import Avatar3 from '@/components/avatars/Avatar3.vue';
@@ -18,7 +19,22 @@ setTimeout(() => {
     location.reload();
 }, 500);
 }
+const isVerified = ref(false);
+const sentEmail = ref(false);
+isVerified.value = pb.authStore.model?.emailVerified;
 
+const sendEmail = async () => {
+  try {
+    if (pb.authStore.model?.email) {
+      await pb.collection('users').requestVerification(pb.authStore.model.email);
+      sentEmail.value = true;
+    } else {
+      console.error('No email found in the auth store model.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 </script>
 
 <template>
@@ -34,6 +50,11 @@ setTimeout(() => {
             <h2 class="my-auto">{{ pb.authStore.model?.username }}</h2>
             <StarsIcon v-if="pb.authStore.model?.premium" class="w-8 h-8 my-auto"/>
         </div>
+    </div>
+
+    <div v-if="isVerified===false">
+        <p>Your email adress has not been verified. Please check your inbox or <button @click="sendEmail" class="font-semibold underline">send the email</button> again</p>
+        <p v-show="sentEmail">Email sent!</p>
     </div>
         <RouterLink :to="{
         name: '/edit/[id]',

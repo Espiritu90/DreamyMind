@@ -41,6 +41,7 @@ const doSignUp = async () => {
     try {
       const record = await pb.collection('users').create(data);
       console.log(pb.authStore.model);
+      await pb.collection('users').requestVerification(email.value);
       await doLogin();
     } catch (error) {
       
