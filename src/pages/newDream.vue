@@ -38,8 +38,8 @@ const submit = async (event: Event) => {
     <h1>Add a new dream</h1>
     <div>
         <form class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5" method="post" @submit="submit">
-            <input type="text" placeholder="Title" name="title" id="title"/>
-            <textarea placeholder="Description" name="textDream" id="textDream"></textarea>
+            <input type="text" placeholder="Title" name="title" id="title" required/>
+            <textarea placeholder="Description" name="textDream" id="textDream" required></textarea>
             <div class="flex justify-between align-middle">
                 <p class="my-auto">Is it a nightmare?</p>
                 <label class="switch">

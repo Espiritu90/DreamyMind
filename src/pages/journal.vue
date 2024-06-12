@@ -16,7 +16,6 @@ const showPublished = ref(false); // State for published filter
 
 import { pb } from '@/backend';
 import { dreamsOfUser } from '@/backend';
-import { on } from 'events';
 
 const record = await dreamsOfUser(pb.authStore.model?.id);
 console.log(record.expand?.dream_via_user);
