@@ -37,41 +37,63 @@ export async function dreamById(id: string){
 export async function doLikePost(idPost: string, idUser: string){
     
 }
-export async function getMostLikedPostLastWeek(): Promise<{ dream: DreamResponse, user: UsersResponse } | null> {
+
+export async function getMostLikedPostThisWeek(): Promise<{ dream: DreamResponse, user: UsersResponse } | null> {
   try {
+    // Calculate the start and end dates of the current week
     const startOfWeek = new Date();
     startOfWeek.setHours(0, 0, 0, 0);
-    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Go to the start of the week (Monday)
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Go to the start of the current week (Monday)
 
-    const endOfWeek = new Date();
-    endOfWeek.setHours(23, 59, 59, 999);
-    endOfWeek.setDate(startOfWeek.getDate() + 6); // Go to the end of the week (Sunday)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Go to the end of the current week (Sunday)
+    endOfWeek.setHours(23, 59, 59, 999); // Set the time to the end of the day
 
-    const lastWeekLikes = await pb.collection<LikePostResponse>('likePost').getFullList({
+    // Fetch all the dream posts created within the current week
+    const thisWeekDreams = await pb.collection<DreamResponse>('dream').getFullList({
       filter: `created >= "${startOfWeek.toISOString()}" && created <= "${endOfWeek.toISOString()}"`,
     });
 
-    const postIdCounts: { [key: string]: number } = {};
-    for (const like of lastWeekLikes) {
-      postIdCounts[like.dream] = (postIdCounts[like.dream] || 0) + 1;
+    // Fetch all the likes that were created within the current week
+    const thisWeekLikes = await pb.collection<LikePostResponse>('likePost').getFullList({
+      filter: `created >= "${startOfWeek.toISOString()}" && created <= "${endOfWeek.toISOString()}"`,
+    });
+
+    // Count the number of likes for each dream post created this week
+    const postIdCounts = thisWeekLikes.reduce((counts, like) => {
+      if (thisWeekDreams.some(dream => dream.id === like.dream)) {
+        counts[like.dream] = (counts[like.dream] || 0) + 1;
+      }
+      return counts;
+    }, {} as { [key: string]: number });
+
+    // Check if there are any likes
+    if (Object.keys(postIdCounts).length === 0) {
+      console.log('No likes found for the dream posts created this week');
+      return null;
     }
 
-    const mostLikedPostId = Object.keys(postIdCounts).reduce((a, b) => postIdCounts[a] > postIdCounts[b] ? a : b);
+    // Find the dream post with the most likes
+    const mostLikedPostId = Object.keys(postIdCounts).reduce((a, b) =>
+      postIdCounts[a] > postIdCounts[b] ? a : b
+    );
 
+    // Fetch the dream post and the user who created it
     const mostLikedPost = await pb.collection<DreamResponse>('dream').getOne(mostLikedPostId);
     if (mostLikedPost) {
       const user = await pb.collection<UsersResponse>('users').getOne(mostLikedPost.user);
       if (user) {
-        console.log("most liked post", mostLikedPost, user);
+        console.log("most liked post created this week", mostLikedPost, user);
         return { dream: mostLikedPost, user };
       }
     }
   } catch (error) {
-    console.error('Failed to fetch most liked post', error);
+    console.error('Failed to fetch most liked post created this week', error);
   }
 
   return null;
 }
+
 
 const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3";
 const headers = { "Authorization": "Bearer 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", "Content-Type": "application/json" };

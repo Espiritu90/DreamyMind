@@ -8,7 +8,7 @@ import { RouterLink } from 'vue-router/auto';
 import { pb } from '@/backend';
 import { ref, onMounted } from 'vue';
 import MoonIcon from '@/components/icons/MoonIcon.vue';
-import { getMostLikedPostLastWeek } from '@/backend';
+import { getMostLikedPostThisWeek } from '@/backend';
 import type { DreamResponse, UsersResponse } from '@/pocketbase-types';
 
 const name = ref('');
@@ -24,7 +24,7 @@ onMounted(async () => {
       console.warn('No authenticated user found');
     }
 
-    mostLikedPost.value = await getMostLikedPostLastWeek();
+    mostLikedPost.value = await getMostLikedPostThisWeek();
   } catch (error) {
     console.error('Failed to fetch user or most liked post', error);
   }
