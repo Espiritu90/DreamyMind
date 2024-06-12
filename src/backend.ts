@@ -104,8 +104,7 @@ export async function interpretDream(id) {
     const dreamText = records.textDream;
     console.log('Dream text:', dreamText);
 
-    const prompt = `You are an expert in dream interpretation. Please provide a simple interpretation of the following dream in no more than 100 words: '${dreamText}'.`;
-    console.log('Prompt:', prompt);
+ const prompt = `You are an expert in dream interpretation. The following text is a dream description written in a specific language and script. Provide the interpretation using exactly the same language and script as the dream text. The interpretation should be no more than 100 words. Do not use any other language or script. The dream text is: '${dreamText}' Please respond in the same language as the dream text.`;    console.log('Prompt:', prompt);
 
     const payload = {
       inputs: prompt,

@@ -254,7 +254,7 @@ async function createInterpretation() {
       </div>
       <div v-if="dreamById.published" class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
         <form method="post" @submit="submit" class="w-full flex gap-4">
-          <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..." id="textComment" name="textComment"/>
+          <textarea type="text" class="h-fit text-14px text-amber-100 font-normal resize-none bg-indigo-900 rounded-xl w-full pl-2 py-2  my-auto border-2 border-amber-100 overflow-scroll" placeholder="Add a comment..." id="textComment" name="textComment"/>
           <input type="text" name="dream" :value="dreamById.id" class="hidden"/>
           <input type="text" name="user" :value="pb.authStore.model?.id" class="hidden"/>
           <button type="submit" class="h-fit w-auto flex align-middle my-auto">
