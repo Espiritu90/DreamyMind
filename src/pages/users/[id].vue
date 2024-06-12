@@ -10,6 +10,7 @@ import Avatar3 from '@/components/avatars/Avatar3.vue';
 import Avatar4 from '@/components/avatars/Avatar4.vue';
 import Avatar5 from '@/components/avatars/Avatar5.vue';
 import Avatar6 from '@/components/avatars/Avatar6.vue';
+import { on } from 'events';
 const router = useRouter();
 
 const doLogout = () =>{
@@ -35,6 +36,12 @@ const sendEmail = async () => {
     console.error('Error:', error);
   }
 };
+
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+});
 </script>
 
 <template>

@@ -4,18 +4,22 @@ import ReportHomeIcon from '@/components/icons/ReportHomeIcon.vue';
 import StarsIcon from '@/components/icons/StarsIcon.vue';
 import Button from '@/components/Button.vue';
 import PostCard from '@/components/PostCard.vue';
-import { RouterLink } from 'vue-router/auto';
 import { pb } from '@/backend';
 import { ref, onMounted } from 'vue';
 import MoonIcon from '@/components/icons/MoonIcon.vue';
 import { getMostLikedPostThisWeek } from '@/backend';
 import type { DreamResponse, UsersResponse } from '@/pocketbase-types';
+import { useRouter } from 'vue-router/auto';
+const router = useRouter();
 
 const name = ref('');
 const mostLikedPost = ref<{ dream: DreamResponse, user: UsersResponse } | null>(null);
 
 // Fetch current user data on component mount
 onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
   try {
     const authUser = pb.authStore.model;
     if (authUser) {

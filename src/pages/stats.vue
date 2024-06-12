@@ -3,12 +3,17 @@ import RadialBar from '@/components/RadialBar.vue';
 import { getUserActivityPercentage, getNightmarePercentage } from '@/backend';
 import { pb } from '@/backend';
 import {ref, onMounted} from 'vue';
+import { useRouter } from 'vue-router/auto';
 // Declare a reactive variable
 const userActivityPercentage = ref(0);
 const userNightmarePercentage = ref(0);
+const router = useRouter();
 
 // Use onMounted to handle the async function
 onMounted(async () => {
+    if (!pb.authStore.model) {
+    router.push('/');
+  }
   if (pb.authStore.model?.id) {
     userActivityPercentage.value = await getUserActivityPercentage(pb.authStore.model.id);
     console.log(userActivityPercentage.value);

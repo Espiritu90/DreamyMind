@@ -3,6 +3,13 @@ import { pb } from '@/backend'
 import { useRouter } from 'vue-router/auto'
 import { dreamById } from '@/backend';
 import { useRoute } from 'vue-router/auto';
+import { onMounted } from 'vue';
+
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+});
 
 const route = useRoute('/editDream/[id]')
 console.log('id :', route.params.id)

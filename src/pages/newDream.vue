@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { pb } from '@/backend'
 import { useRouter } from 'vue-router/auto'
+import { onMounted } from 'vue';
 const router = useRouter()
+
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/')
+  }
+})
+
 const submit = async (event: Event) => {
   event.preventDefault()
   const form = event.target as HTMLFormElement

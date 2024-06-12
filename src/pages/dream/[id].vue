@@ -32,6 +32,10 @@ const user = ref<UsersResponse>();
 const comments = ref<Array<{ comment: CommentResponse, user: UsersResponse }>>([]);
 
 onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+
   const loggedInUserId = pb.authStore.model.id;
 
   // Fetch the user data for the dream

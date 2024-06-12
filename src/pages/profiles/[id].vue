@@ -9,6 +9,8 @@ import Avatar6 from '@/components/avatars/Avatar6.vue';
 import { publicDreamsOfUser } from '@/backend';
 import { useRoute } from 'vue-router/auto';
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router/auto';
+const router = useRouter();
 
 const route = useRoute('/profiles/[id]');
 console.log('id:', route.params.id);
@@ -16,6 +18,9 @@ console.log('id:', route.params.id);
 const record = ref();
 
 onMounted(async () => {
+  if (!route.params.id) {
+    router.push('/');
+  }
   record.value = await publicDreamsOfUser(route.params.id);
   console.log(record.value.expand?.dream_via_user);
 });

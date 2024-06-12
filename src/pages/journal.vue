@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import DreamCard from '@/components/DreamCard.vue';
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router/auto';
+const router = useRouter();
+import { onMounted } from 'vue';
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+});
 
 const all = ref(true);
 const showNightmares = ref(false); // State for nightmares filter
@@ -8,6 +16,7 @@ const showPublished = ref(false); // State for published filter
 
 import { pb } from '@/backend';
 import { dreamsOfUser } from '@/backend';
+import { on } from 'events';
 
 const record = await dreamsOfUser(pb.authStore.model?.id);
 console.log(record.expand?.dream_via_user);

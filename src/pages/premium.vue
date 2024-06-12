@@ -2,6 +2,13 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router/auto';
 import { pb } from '@/backend';
+import { onMounted } from 'vue';
+
+onMounted(async () => {
+    if (!pb.authStore.model) {
+        router.push('/');
+    }
+});
 
 const router = useRouter();
 const promocode= ref("MMI1-2024");

@@ -27,6 +27,12 @@ const doRequest = async () => {
   }
 };
 
+import { onMounted } from 'vue';
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+});
 </script>
 
 <template>

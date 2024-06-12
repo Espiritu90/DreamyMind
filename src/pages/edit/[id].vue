@@ -8,7 +8,13 @@ import Avatar6 from '@/components/avatars/Avatar6.vue';
 import { pb } from '@/backend';
 import { useRouter } from 'vue-router/auto';
 import { ref } from 'vue';
+import { onMounted } from 'vue';
 
+onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
+});
 const deleteOpen = ref(false)
 const cancelOpen = ref(false)
 

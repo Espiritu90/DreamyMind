@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router/auto'
+import { onMounted } from 'vue';
+import { pb } from '@/backend';
+const router = useRouter()
+onMounted(async () => {
+    if (!pb.authStore.model) {
+        router.push('/');
+    }
+});
+</script>
+
 <template>
     <div class="wrapper !h-screen">
         <div class="bg-indigo-900 rounded-[32px] flex flex-col align-middle justify-center py-2 px-6 mt-3">

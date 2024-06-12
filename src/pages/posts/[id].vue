@@ -185,6 +185,9 @@ async function createInterpretation() {
 
 // Call the interpret function when the page is loaded
 onMounted(async () => {
+  if (!pb.authStore.model) {
+    router.push('/');
+  }
   console.log('Mounted hook');
   await fetchUserAndDreamData();
   await interpret();
