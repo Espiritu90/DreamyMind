@@ -18,5 +18,5 @@ import NavBar from './components/NavBar.vue'
     </RouterView>
     <NavBar/>
     <img src="/img/gradient.webp"
-    class="absolute top-0 left-0 h-screen object-cover object-right-top opacity-70 -z-20"/>
+    class="absolute top-0 left-0 h-screen w-screen object-cover object-right-top opacity-70 -z-20"/>
 </template>
