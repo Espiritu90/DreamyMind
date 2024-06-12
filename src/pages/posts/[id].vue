@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { CommentResponse, DreamResponse, UsersResponse, LikePostResponse, InterpretationResponse  } from '@/pocketbase-types';
+import type { CommentResponse, DreamResponse, UsersResponse, LikePostResponse, InterpretationResponse } from '@/pocketbase-types';
 import { pb } from '@/backend';
 import { useRoute } from 'vue-router/auto';
 import LikeIcon from '@/components/icons/LikeIcon.vue';
@@ -23,7 +23,7 @@ const isLiked = ref(false);
 const likeCount = ref(0);
 const commentCount = ref(0);
 
-const route = useRoute('/dream/[id]');
+const route = useRoute('/posts/[id]');
 console.log('id :', route.params.id);
 
 const dreamById = await pb.collection<DreamResponse>('dream').getOne(route.params.id);
@@ -31,45 +31,49 @@ const user = ref<UsersResponse>();
 
 const comments = ref<Array<{ comment: CommentResponse, user: UsersResponse }>>([]);
 
-onMounted(async () => {
-  const loggedInUserId = pb.authStore.model?.id;
+const fetchUserAndDreamData = async () => {
+  try {
+    const loggedInUserId = pb.authStore.model?.id;
 
-  // Fetch the user data for the dream
-  user.value = await pb.collection('users').getOne(dreamById.user);
+    // Fetch the user data for the dream
+    user.value = await pb.collection('users').getOne(dreamById.user);
 
-  // Fetch the likes and comments for the dream
-  const dreamData = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse, likePost_via_dream: LikePostResponse, interpretation_via_dream: InterpretationResponse }>>('dream').getOne(route.params.id, {
-    expand: "comment_via_dream,likePost_via_dream,interpretation_via_dream",
-    sort: "expand.comment_via_dream.created"
-  });
+    // Fetch the likes and comments for the dream
+    const dreamData = await pb.collection<DreamResponse<{ comment_via_dream: CommentResponse[], likePost_via_dream: LikePostResponse[], interpretation_via_dream: InterpretationResponse[] }>>('dream').getOne(route.params.id, {
+      expand: "comment_via_dream,likePost_via_dream,interpretation_via_dream",
+      sort: "expand.comment_via_dream.created"
+    });
 
-  console.log('dreamData:', dreamData);
+    console.log('dreamData:', dreamData);
 
+    // Update the comment count
+    if (dreamData.expand?.comment_via_dream) {
+      commentCount.value = dreamData.expand.comment_via_dream.length;
 
-  // Update the comment count
-  if (dreamData.expand?.comment_via_dream) {
-    commentCount.value = dreamData.expand.comment_via_dream.length;
+      for (const comment of dreamData.expand.comment_via_dream.reverse()) { // Reverse the comments array
+        const userOfComment = await pb.collection<UsersResponse>('users').getOne(comment.user ?? '');
 
-    for (const comment of dreamData.expand.comment_via_dream.reverse()) { // Reverse the comments array
-      const userOfComment = await pb.collection<UsersResponse>('users').getOne(comment.user ?? '');
-
-      // Prioritize logged-in user's comments by moving them to the beginning of the array
-      if (userOfComment.id === loggedInUserId) {
-        comments.value.unshift({ comment, user: userOfComment });
-      } else {
-        comments.value.push({ comment, user: userOfComment });
+        // Prioritize logged-in user's comments by moving them to the beginning of the array
+        if (userOfComment.id === loggedInUserId) {
+          comments.value.unshift({ comment, user: userOfComment });
+        } else {
+          comments.value.push({ comment, user: userOfComment });
+        }
       }
     }
-  }
 
-  // Update the like count
-  if (dreamData.expand?.likePost_via_dream) {
-    likeCount.value = dreamData.expand.likePost_via_dream.length;
+    // Update the like count
+    if (dreamData.expand?.likePost_via_dream) {
+      likeCount.value = dreamData.expand.likePost_via_dream.length;
 
-    // Check if the user has liked the post
-    isLiked.value = dreamData.expand.likePost_via_dream.some(like => like.user === loggedInUserId);
+      // Check if the user has liked the post
+      isLiked.value = dreamData.expand.likePost_via_dream.some(like => like.user === loggedInUserId);
+    }
+  } catch (error) {
+    console.error('Error fetching user and dream data:', error);
   }
-});
+};
+
 
 const submit = async (event: Event) => {
   console.log('Form submitted');
@@ -80,7 +84,7 @@ const submit = async (event: Event) => {
     const newComment = await pb.collection('comment').create(formData);
     console.log('Comment created:', newComment);
     setTimeout(() => {
-        location.reload();
+      location.reload();
     }, 500);
     // Optionally, update the comments list or reset the form here
   } catch (error) {
@@ -103,7 +107,6 @@ const deleteDream = async () => {
     console.error('Error deleting dream:', error);
   }
 }
-
 
 const idUser = pb.authStore.model?.id;
 const idPost = dreamById.id;
@@ -142,45 +145,56 @@ let record = ref<DreamResponse<{ interpretation_via_dream: InterpretationRespons
 async function interpret() {
   const dreamId = route.params.id;
 
-  // Check if an interpretation already exists for the dream
-  const interpretationRecord = await pb.collection('interpretation').getFirstListItem(`dream="${dreamId}"`);
+  try {
+    // Check if an interpretation already exists for the dream
+    const interpretationRecord = await pb.collection('interpretation').getFirstListItem(`dream="${dreamId}"`);
 
-  if (interpretationRecord) {
-    // If an interpretation already exists, display it
-    aiVisible.value = true;
-    record.value = await interpretationByDream(dreamId);
-    console.log('Interpretation record:', record.value);
-    console.log('interpretation_via_dream:', record.value.expand?.interpretation_via_dream);
-  } else {
-    // If no interpretation exists, display the "Explain with AI" button
-    aiVisible.value = false;
+    if (interpretationRecord) {
+      // If an interpretation already exists, display it
+      aiVisible.value = true;
+      record.value = await interpretationByDream(dreamId);
+      console.log('Interpretation record:', record.value);
+      console.log('interpretation_via_dream:', record.value.expand?.interpretation_via_dream);
+    } else {
+      // If no interpretation exists, display the "Explain with AI" button
+      aiVisible.value = false;
+    }
+  } catch (error) {
+    console.error('Error fetching interpretation:', error);
   }
 }
-
 
 async function createInterpretation() {
   const dreamId = route.params.id;
 
-  // Create a new interpretation record
-  const interpretation = await interpretDream(dreamId);
-  console.log('Interpretation:', interpretation);
+  try {
+    // Create a new interpretation record
+    const interpretation = await interpretDream(dreamId);
+    console.log('Interpretation:', interpretation);
 
-  // Fetch the interpretation record for the dream
-  record.value = await interpretationByDream(dreamId);
-  console.log('Interpretation record:', record.value);
+    // Fetch the interpretation record for the dream
+    record.value = await interpretationByDream(dreamId);
+    console.log('Interpretation record:', record.value);
 
-  // Display the interpretation
-  aiVisible.value = true;
+    // Display the interpretation
+    aiVisible.value = true;
+  } catch (error) {
+    console.error('Error creating interpretation:', error);
+  }
 }
 
 // Call the interpret function when the page is loaded
 onMounted(async () => {
+  console.log('Mounted hook');
+  await fetchUserAndDreamData();
   await interpret();
 });
+
 
 import StarsIcon from '@/components/icons/StarsIcon.vue';
 
 </script>
+
 
 <template>
   <div class="wrapper">

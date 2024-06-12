@@ -72,7 +72,7 @@ onMounted(async () => {
       <p class="font-semibold text-center">Continue reading</p>
     </RouterLink>
     <!--like+comment-->
-    <div class="flex gap-5">
+    <div v-if="published" class="flex gap-5">
             <div class="flex gap-2 align-text-top justify-start">
                 <LikeIcon @click="toggleLike" :class="{ 'fill-amber-100': isLiked }" class="w-7 stroke-amber-100" />
                 <p class="my-auto">{{ likeCount }}</p>

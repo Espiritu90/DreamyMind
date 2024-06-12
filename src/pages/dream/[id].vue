@@ -8,7 +8,6 @@ import CommentIcon from '@/components/icons/CommentIcon.vue';
 import SendIcon from '@/components/icons/SendIcon.vue';
 import Comment from '@/components/Comment.vue';
 import { useRouter } from 'vue-router/auto';
-import StarsIcon from '@/components/icons/StarsIcon.vue';
 
 // Import avatar components
 import Avatar1 from '@/components/avatars/Avatar1.vue';
@@ -23,7 +22,6 @@ const router = useRouter();
 const isLiked = ref(false);
 const likes = ref(0);
 const commentCount = ref(0);
-const isError = ref(false);
 
 const route = useRoute('/dream/[id]');
 console.log('id :', route.params.id);
@@ -78,7 +76,7 @@ onMounted(async () => {
 });
 
 async function toggleLike() {
-  const loggedInUserId = pb.authStore.model?.id;
+  const loggedInUserId = pb.authStore.model.id;
   const dreamId = dreamById.id;
 
   if (isLiked.value) {
@@ -160,29 +158,24 @@ async function interpret() {
   }
 }
 
+
 async function createInterpretation() {
-  try {
-    const dreamId = route.params.id;
+  const dreamId = route.params.id;
 
-    // Create a new interpretation record
-    const interpretation = await interpretDream(dreamId);
-    console.log('Interpretation:', interpretation);
+  // Create a new interpretation record
+  const interpretation = await interpretDream(dreamId);
+  console.log('Interpretation:', interpretation);
 
-    // Fetch the interpretation record for the dream
-    record.value = await interpretationByDream(dreamId);
-    console.log('Interpretation record:', record.value);
+  // Fetch the interpretation record for the dream
+  record.value = await interpretationByDream(dreamId);
+  console.log('Interpretation record:', record.value);
 
-    // Display the interpretation
-    aiVisible.value = true;
-  } catch (error) {
-    console.error('Error creating interpretation:', error);
-    isError.value = true;
-  }
+  // Display the interpretation
+  aiVisible.value = true;
 }
+
 // Call the interpret function when the page is loaded
-onMounted(async () => {
-  await interpret();
-});
+
 </script>
 
 <template>
@@ -202,10 +195,7 @@ onMounted(async () => {
           <div v-if="user.avatar === 4"><Avatar4 class="w-8 h-8 rounded-full" /></div>
           <div v-if="user.avatar === 5"><Avatar5 class="w-8 h-8 rounded-full" /></div>
           <div v-if="user.avatar === 6"><Avatar6 class="w-8 h-8 rounded-full" /></div>
-          <div class="flex gap-2">
-            <p class="text-amber-100 ">{{ user.username }}</p>
-            <StarsIcon v-if="user.premium" class="w-4 h-4 self-start m-0"/>
-        </div>
+          <p class="text-sm text-amber-100">{{ user.username }}</p>
         </div>
       </RouterLink>
 
@@ -213,12 +203,11 @@ onMounted(async () => {
         <h1>{{ dreamById.title }}</h1>
         <p>{{ dreamById.textDream }}</p>
 
+        
           <button
             v-if="!aiVisible"
             @click="createInterpretation"
             class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
-            <p v-if="isError" class="text-[12px] text-violet-300 mt-4 -mb-3 font-extralight">Error interpreting dream. Please, try again later</p>
-
         </div>
         <div v-if="aiVisible && record" class="block h-0.5 w-full bg-amber-100 my-3"></div>
 <div v-if="aiVisible && record" class="transition-opacity duration-500">
@@ -251,7 +240,7 @@ onMounted(async () => {
       </div>
     
 
-      <div>
+      <div v-if="dreamById.published">
         <div class="flex gap-5">
           <div class="flex gap-1">
             <LikeIcon class="w-7 h-auto stroke-amber-100" @click="toggleLike" :class="{ 'fill-amber-100': isLiked }"/>
@@ -263,7 +252,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
+      <div v-if="dreamById.published" class="w-full bg-indigo-900 p-1 flex align-middle justify-between gap-4">
         <form method="post" @submit="submit" class="w-full flex gap-4">
           <input type="text" class="w-full rounded-full border-2 border-amber-100 my-auto pl-3" placeholder="Add a comment..." id="textComment" name="textComment"/>
           <input type="text" name="dream" :value="dreamById.id" class="hidden"/>
