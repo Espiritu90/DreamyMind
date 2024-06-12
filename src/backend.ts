@@ -15,7 +15,8 @@ export async function publicDreamsOfUser(id: string) {
   const user = await pb.collection('users').getOne(id);
   const dreams = await pb.collection('dream').getFullList({
     filter: `user = "${id}" && published = true`,
-    expand: 'user'
+    expand: 'user',
+    sort: '-created',
   });
   return { ...user, expand: { dream_via_user: dreams } };
 }

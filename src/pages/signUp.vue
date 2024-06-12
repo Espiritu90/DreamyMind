@@ -92,7 +92,7 @@ const messageClass = computed(() => {
           <!-- Name input -->
           <label for="name">Name</label>
           <input type="text" id="name" placeholder="ex.: Emily" required v-model="name">
-          <p class="text-[12px] text-violet-300 mb-3 font-extralight -m-2">*Your name will not be displayed to other users</p>
+          <p class="text-sm text-violet-300 mb-3 font-light -m-2">*Your name will not be displayed to other users</p>
 
           <!-- Email input -->
           <label for="email">Email</label>
@@ -160,7 +160,7 @@ const messageClass = computed(() => {
           <input type="password" id="password2" placeholder="********" v-model="passwordConfirm" @input="checkPasswords" required>
 
           <!-- Password message -->
-          <p class="text-[12px] text-violet-300 mb-3 font-extralight -m-2" :class="messageClass">{{ message }}</p>
+          <p class="text-sm text-violet-300 mb-3 font-light -m-2" :class="messageClass">{{ message }}</p>
 
           <!-- Terms and conditions checkbox -->
           <div class="flex flex-row justify-between gap-3">
@@ -172,7 +172,7 @@ const messageClass = computed(() => {
                 </svg>
               </span>
             </label>
-            <p class="text-[12px] font-extralight my-auto">I have read and accept <a href="https://dreamy-mind.ozone-digital.fr/terms-and-conditions-of-use/" class="underline">Terms and conditions</a></p>
+            <p class="text-sm font-light my-auto">I have read and accept <a href="https://dreamy-mind.ozone-digital.fr/terms-and-conditions-of-use/" class="underline">Terms and conditions</a></p>
           </div>
 
             <p v-if="isError" class="text-[12px] text-violet-300 mb-3 font-extralight -m-2">Error signing up. Please verify that all fields are filled correctly.</p>

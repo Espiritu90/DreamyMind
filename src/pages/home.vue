@@ -43,7 +43,7 @@ onMounted(async () => {
         <div v-if="mostLikedPost">
           <PostCard :dream="mostLikedPost.dream" :user="mostLikedPost.user" />
         </div>
-        <RouterLink v-if="!pb.authStore.model?.premium" to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between gap-16 py-5 px-6 rounded-[32px]" >
+        <RouterLink v-if="!pb.authStore.model?.premium" to="/premium" class="bg-gradient-to-tr from-[#F2EAD0] via-[#F7D977] to-[#F2EAD0] flex justify-between gap-16 py-5 px-6 rounded-[32px] mb-3" >
             <div class="flex flex-col justify-between" >
                 <h3 class="text-indigo-900">Get Premium</h3>
                 <p class="text-indigo-900 ">Explore our unique features</p>

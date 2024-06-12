@@ -117,7 +117,7 @@
     }
 
     h1{
-        @apply text-4xl text-amber-100 font-bold;
+        @apply text-4xl text-amber-100 font-bold mt-2;
     }
 
     h2{

@@ -229,8 +229,9 @@ import StarsIcon from '@/components/icons/StarsIcon.vue';
             @click="createInterpretation"
             class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
         </div>
-        <div v-if="aiVisible && record" class="block h-0.5 w-full bg-amber-100 my-3"></div>
-<div v-if="aiVisible && record" class="transition-opacity duration-500">
+
+        <div v-if="aiVisible && record && user?.id === pb.authStore.model?.id" class="block h-0.5 w-full bg-amber-100 my-3"></div>
+<div v-if="aiVisible && record && user?.id === pb.authStore.model?.id" class="transition-opacity duration-500">
   <h2>AI explanation</h2>
   <p v-for="interpretation in record.expand?.interpretation_via_dream" :key="interpretation.id">
     {{ interpretation.textInterpretation }}

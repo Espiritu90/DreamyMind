@@ -219,14 +219,14 @@ async function createInterpretation() {
 <div v-if="user?.id === pb.authStore.model?.id">
           <div class="flex gap-3">
             <button @click="openDelete"
-              class=" bg-red-700 rounded-full align-middle py-3 px-6 w-full mt-2 font-semibold text-amber-100">Delete dream</button>
+              class=" bg-red-700 rounded-full align-middle py-3 px-6 w-full mt-1 font-semibold text-amber-100">Delete dream</button>
             <RouterLink :to="{
               name: '/editDream/[id]',
               params: {
                 id: dreamById.id
               }
             }"
-              class=" bg-fuchsia-900 rounded-full align-middle text-center py-3 px-6 w-full text-amber-100 font-semibold mt-2">Edit dream</RouterLink>
+              class=" bg-fuchsia-900 rounded-full align-middle text-center py-3 px-6 w-full text-amber-100 font-semibold mt-1">Edit dream</RouterLink>
           </div>
           <div v-if="deleteOpen" class="transition-opacity duration-500">
             <p class="my-2">Are you sure you want to delete this dream?</p>

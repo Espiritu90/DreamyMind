@@ -121,7 +121,7 @@ const cancelPremium = async () => {
     </form>
     <div class="my-3 bg-indigo-900 rounded-[32px] pt-8 p-5">
         <div class="flex flex-col gap-4">
-            <button type="submit" class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6">Change password</button>
+            <RouterLink to="/changePassword" class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6">Change password</RouterLink >
             <button type="submit" class="flex text-amber-100 font-semibold w-full justify-center bg-fuchsia-900 rounded-full align-middle py-2 px-6" @click="cancelOpen=true" v-if="pb.authStore.model?.premium">Cancel premium subscription</button>
             <div v-show="cancelOpen">
                 <p>By canceling your premium subscription, you will lose access to exclusive features and content. Are you sure you want to proceed?</p>
