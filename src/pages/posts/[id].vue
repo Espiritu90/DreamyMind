@@ -136,6 +136,7 @@ const doLikePost = async () => {
 };
 
 const aiVisible = ref(false);
+const aiStarted = ref(false);
 
 import { interpretDream } from '@/backend';
 import { interpretationByDream } from '@/backend';
@@ -166,6 +167,7 @@ async function interpret() {
 
 async function createInterpretation() {
   const dreamId = route.params.id;
+  aiStarted.value = true;
 
   try {
     // Create a new interpretation record
@@ -177,6 +179,7 @@ async function createInterpretation() {
     console.log('Interpretation record:', record.value);
 
     // Display the interpretation
+    aiStarted.value = false;
     aiVisible.value = true;
   } catch (error) {
     console.error('Error creating interpretation:', error);
@@ -228,13 +231,15 @@ import StarsIcon from '@/components/icons/StarsIcon.vue';
         <p>{{ dreamById.textDream }}</p>
 
        <button
-            v-if="!aiVisible && user?.id === pb.authStore.model?.id"
+            v-if="!aiVisible && user?.id === pb.authStore.model?.id && !aiStarted"
             @click="createInterpretation"
             class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
         </div>
+      
+      <p v-if="!aiVisible && aiStarted && user?.id===pb.authStore.model?.id" class="text-sm text-violet-300 mb-3 font-light">Please, wait for a few seconds</p>
 
-        <div v-if="aiVisible && record && user?.id === pb.authStore.model?.id" class="block h-0.5 w-full bg-amber-100 my-3"></div>
-<div v-if="aiVisible && record && user?.id === pb.authStore.model?.id" class="transition-opacity duration-500">
+        <div v-if="aiVisible && record && user?.id === pb.authStore.model?.id && !aiStarted" class="block h-0.5 w-full bg-amber-100 my-3"></div>
+<div v-if="aiVisible && record && user?.id === pb.authStore.model?.id && !aiStarted" class="transition-opacity duration-500">
   <h2>AI explanation</h2>
   <p v-for="interpretation in record.expand?.interpretation_via_dream" :key="interpretation.id">
     {{ interpretation.textInterpretation }}

@@ -216,7 +216,7 @@ async function createInterpretation() {
             @click="createInterpretation"
             class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
         </div>
-        <p v-if="!aiVisible && aiStarted">Please, wait for a few seconds</p>
+        <p v-if="!aiVisible && aiStarted" class="text-sm text-violet-300 mb-3 font-light">Please, wait for a few seconds</p>
         <div v-if="aiVisible && record && !aiStarted" class="block h-0.5 w-full bg-amber-100 my-3"></div>
 <div v-if="aiVisible && record && !aiStarted" class="transition-opacity duration-500">
   <h2>AI explanation</h2>
