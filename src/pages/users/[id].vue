@@ -19,22 +19,6 @@ setTimeout(() => {
     location.reload();
 }, 500);
 }
-const isVerified = ref(false);
-const sentEmail = ref(false);
-isVerified.value = pb.authStore.model?.emailVerified;
-
-const sendEmail = async () => {
-  try {
-    if (pb.authStore.model?.email) {
-      await pb.collection('users').requestVerification(pb.authStore.model.email);
-      sentEmail.value = true;
-    } else {
-      console.error('No email found in the auth store model.');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
 
 onMounted(async () => {
   if (!pb.authStore.model) {
@@ -58,9 +42,6 @@ onMounted(async () => {
         </div>
     </div>
 
-    <div v-if="isVerified===false">
-        <p>Your email adress has not been verified. Please check your inbox or <button @click="sendEmail" class="font-semibold underline">send the email</button> again</p>
-        <p v-show="sentEmail">Email sent!</p>
     </div>
         <RouterLink :to="{
         name: '/edit/[id]',
