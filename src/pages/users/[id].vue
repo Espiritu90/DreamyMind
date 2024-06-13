@@ -42,7 +42,7 @@ onMounted(async () => {
         </div>
     </div>
 
-    </div>
+   
         <RouterLink :to="{
         name: '/edit/[id]',
         params: {
