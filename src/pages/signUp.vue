@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { pb } from '@/backend';
 import { useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Avatar1 from '@/components/avatars/Avatar1.vue';
 import Avatar2 from '@/components/avatars/Avatar2.vue';
 import Avatar3 from '@/components/avatars/Avatar3.vue'; 
@@ -21,12 +21,29 @@ const message = ref("");
 const passwordsMatch = ref(false);
 const avatar = ref(1);
 const isError = ref(false);
+const usernameMessage = ref("");
 
 if (currentUser.value) {
   router.push('/home');
 }
 
+const validateUsername = () => {
+  // Regex: only letters and numbers, minimum 3 characters, maximum 20 characters
+  const regex = /^[a-zA-Z0-9]{3,20}$/;
+  if (!regex.test(username.value)) {
+    usernameMessage.value = 'Username must be 3-20 characters long and contain only letters and numbers.';
+  } else {
+    usernameMessage.value = '';
+  }
+};
+
 const doSignUp = async () => {
+  validateUsername(); // Ensure username is valid before proceeding
+  if (usernameMessage.value) {
+    isError.value = true;
+    return;
+  }
+
   if (terms.value === true) {
     const data = {
       username: username.value,
@@ -44,11 +61,19 @@ const doSignUp = async () => {
       await pb.collection('users').requestVerification(email.value);
       await doLogin();
     } catch (error) {
-      
       console.error(error);
       isError.value = true;
+
+      if (error.data && error.data.code === "username_conflict") {
+        message.value = 'The username is already taken. Please choose a different username.';
+      } else if (error.data && error.data.code === "email_conflict") {
+        message.value = 'The email is already registered. Please use a different email or log in.';
+      } else {
+        message.value = 'Error signing up. Please verify that all fields are filled correctly.';
+      }
     }
-  }};
+  }
+};
 
 const doLogin = async () => {
   const authData = await pb.collection('users').authWithPassword(email.value, password.value);
@@ -60,7 +85,7 @@ const doLogin = async () => {
   }
   setTimeout(() => {
     location.reload();
-}, 500);
+  }, 500);
 };
 
 // Function to check if passwords match
@@ -76,6 +101,9 @@ const checkPasswords = () => {
     passwordsMatch.value = true;
   }
 };
+
+// Watch the username input and validate on change
+watch(username, validateUsername);
 
 // Computed property to determine the CSS class for the message
 const messageClass = computed(() => {
@@ -106,10 +134,11 @@ const messageClass = computed(() => {
           <!-- Username input -->
           <label for="username">Username</label>
           <input type="text" id="username" placeholder="ex.: sleepy_user204" required v-model="username">
+          <p class="text-sm text-violet-300 mb-3 font-light -m-2" v-if="usernameMessage">{{ usernameMessage }}</p>
 
-                    <!-- Avatar selection -->
-             <label>Pick your avatar</label>
-             <div class="flex justify-around">
+          <!-- Avatar selection -->
+          <label>Pick your avatar</label>
+          <div class="flex justify-around">
             
             <div>
               <div class="flex align-middle gap-4">
@@ -130,9 +159,9 @@ const messageClass = computed(() => {
                   <Avatar3 />
                 </label>
               </div>
-              </div>
+            </div>
 
-              <div>
+            <div>
               <div class="flex align-middle gap-4">
                 <input type="radio" id="4" name="avatar" value="4" class="w-fit" v-model="avatar">
                 <label for="4">
@@ -152,9 +181,7 @@ const messageClass = computed(() => {
                 </label>
               </div>
             </div>
-        </div>
-
-
+          </div>
 
           <!-- Password input -->
           <label for="password1">Create a password</label>
@@ -180,7 +207,7 @@ const messageClass = computed(() => {
             <p class="text-sm font-light my-auto">I have read and accept <a href="https://dreamy-mind.ozone-digital.fr/terms-and-conditions-of-use/" class="underline">Terms and conditions</a></p>
           </div>
 
-            <p v-if="isError" class="text-sm text-violet-300 m-3 mb-4 font-light ">Error signing up. Please verify that all fields are filled correctly.</p>
+          <p v-if="isError" class="text-sm text-violet-300 m-3 mb-4 font-light">Error signing up. Please verify that all fields are filled correctly.</p>
           <!-- Submit button -->
           <button class="button_submit" :disabled="!passwordsMatch" @click="doSignUp" type="button">Sign up</button>
         </form>
