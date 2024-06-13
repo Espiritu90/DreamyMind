@@ -31,7 +31,7 @@ const deleteAccount = async () => {
 
     // Delete user's records from 'dream' collection
     const dreams = await pb.collection('dream').getFullList({
-      filter: `user = '${pb.authStore.model.id}'`
+      filter: `user = '${pb.authStore.model?.id}'`
     });
     for (const dream of dreams) {
       await pb.collection('dream').delete(dream.id);
@@ -39,18 +39,21 @@ const deleteAccount = async () => {
 
     // Delete user's records from 'comment' collection
     const comments = await pb.collection('comment').getFullList({
-      filter: `user = '${pb.authStore.model.id}'`
+      filter: `user = '${pb.authStore.model?.id}'`
     });
     for (const comment of comments) {
       await pb.collection('comment').delete(comment.id);
     }
 
     // Delete user account
-    await pb.collection('users').delete(pb.authStore.model.id);
+    await pb.collection('users').delete(pb.authStore.model?.id);
     router.push({ name: '/' });
     // Log out the user
     pb.authStore.clear();
     console.log("User account and associated records deleted successfully");
+    setTimeout(() => {
+      location.reload();
+    }, 500);
   } catch (error) {
     console.error("Error deleting user account:", error);
   }
@@ -58,7 +61,7 @@ const deleteAccount = async () => {
 
 const cancelPremium = async () => {
   try {
-    await pb.collection('users').update(pb.authStore.model.id, { premium: false });
+    await pb.collection('users').update(pb.authStore.model?.id, { premium: false });
     console.log("User premium subscription cancelled successfully");
     router.push({ name: '/home' });
     setTimeout(() => {

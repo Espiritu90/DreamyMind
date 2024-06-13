@@ -22,7 +22,7 @@ console.log(record.expand?.dream_via_user);
 
 const sortedDreams = computed(() => {
   if (record.expand?.dream_via_user) {
-    let dreams = record.expand.dream_via_user.slice().sort((a, b) => {
+    let dreams = record.expand.dream_via_user?.slice().sort((a, b) => {
       return new Date(b.created).getTime() - new Date(a.created).getTime();
     });
 

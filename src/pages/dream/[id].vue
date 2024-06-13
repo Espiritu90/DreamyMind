@@ -36,7 +36,7 @@ onMounted(async () => {
     router.push('/');
   }
 
-  const loggedInUserId = pb.authStore.model.id;
+  const loggedInUserId = pb.authStore.model?.id;
 
   // Fetch the user data for the dream
   user.value = await pb.collection('users').getOne(dreamById.user);
@@ -80,7 +80,7 @@ onMounted(async () => {
 });
 
 async function toggleLike() {
-  const loggedInUserId = pb.authStore.model.id;
+  const loggedInUserId = pb.authStore.model?.id;
   const dreamId = dreamById.id;
 
   if (isLiked.value) {
@@ -138,6 +138,7 @@ const deleteDream = async () => {
 }
 
 const aiVisible = ref(false);
+const aiStarted = ref(false);
 
 import { interpretDream } from '@/backend';
 import { interpretationByDream } from '@/backend';
@@ -165,6 +166,7 @@ async function interpret() {
 
 async function createInterpretation() {
   const dreamId = route.params.id;
+  aiStarted.value = true;
 
   // Create a new interpretation record
   const interpretation = await interpretDream(dreamId);
@@ -175,6 +177,7 @@ async function createInterpretation() {
   console.log('Interpretation record:', record.value);
 
   // Display the interpretation
+  aiStarted.value = false;
   aiVisible.value = true;
 }
 
@@ -209,12 +212,13 @@ async function createInterpretation() {
 
         
           <button
-            v-if="!aiVisible"
+            v-if="!aiVisible && !aiStarted"
             @click="createInterpretation"
             class=" bg-fuchsia-900 rounded-full align-middle py-3 px-6 w-full text-amber-100 font-semibold mt-2">Explain with AI</button>
         </div>
-        <div v-if="aiVisible && record" class="block h-0.5 w-full bg-amber-100 my-3"></div>
-<div v-if="aiVisible && record" class="transition-opacity duration-500">
+        <p v-if="!aiVisible && aiStarted">Please, wait for a few seconds</p>
+        <div v-if="aiVisible && record && !aiStarted" class="block h-0.5 w-full bg-amber-100 my-3"></div>
+<div v-if="aiVisible && record && !aiStarted" class="transition-opacity duration-500">
   <h2>AI explanation</h2>
   <p v-for="interpretation in record.expand?.interpretation_via_dream" :key="interpretation.id">
     {{ interpretation.textInterpretation }}
